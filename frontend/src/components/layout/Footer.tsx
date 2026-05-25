@@ -10,9 +10,9 @@ export function Footer() {
               <span className="relative flex h-7 w-7 items-center justify-center">
                 <span className="absolute inset-0 rounded-md animate-aurora" style={{ background: "var(--gradient-aurora)" }} />
                 <span className="absolute inset-[2px] rounded-[4px] bg-background" />
-                <span className="relative font-display text-[11px] font-bold text-gradient">N</span>
+                <span className="relative font-display text-[11px] font-bold text-gradient">P</span>
               </span>
-              <span className="font-display text-sm font-semibold tracking-[0.2em]">NEURALYX</span>
+              <span className="font-display text-sm font-semibold tracking-[0.2em]">PREDICTAFI</span>
             </div>
             <p className="mt-4 max-w-xs text-sm text-muted-foreground">
               The intelligence layer for global markets. Predict, position, perform — at machine speed.
@@ -40,7 +40,7 @@ export function Footer() {
           ))}
         </div>
         <div className="mt-16 flex flex-col items-start justify-between gap-4 border-t border-white/5 pt-6 text-xs text-muted-foreground md:flex-row">
-          <div>© {new Date().getFullYear()} Neuralyx Systems. Not investment advice.</div>
+          <div>© {new Date().getFullYear()} PredictaFi Systems. Not investment advice.</div>
           <div className="flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--signal-buy)] animate-pulse-glow" />
             All systems nominal · v4.2.1

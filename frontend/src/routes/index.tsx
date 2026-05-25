@@ -12,12 +12,25 @@ import { NewsSentiment } from "@/components/sections/NewsSentiment";
 import { NeonButton } from "@/components/ui/NeonButton";
 import { ArrowUpRight } from "lucide-react";
 
+// Global state provider
+import { AppProvider } from "@/store/appStore";
+
+// Modals — mounted once at root level
+import { DemoModal } from "@/components/modals/DemoModal";
+import { RequestAccessModal } from "@/components/modals/RequestAccessModal";
+import { AuthModal } from "@/components/modals/AuthModal";
+import { PredictionDetailModal } from "@/components/modals/PredictionDetailModal";
+import { MarketDetailModal } from "@/components/modals/MarketDetailModal";
+
+// Toast notifications
+import { ToastContainer } from "@/components/ui/ToastContainer";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Neuralyx — AI Stock Market Intelligence" },
-      { name: "description", content: "Neuralyx is the AI intelligence layer for global markets. Predict every major asset on Earth in real time with full explainability." },
-      { property: "og:title", content: "Neuralyx — AI Stock Market Intelligence" },
+      { title: "PredictaFi — AI Stock Market Intelligence" },
+      { name: "description", content: "PredictaFi is the AI intelligence layer for global markets. Predict every major asset on Earth in real time with full explainability." },
+      { property: "og:title", content: "PredictaFi — AI Stock Market Intelligence" },
       { property: "og:description", content: "Predict the markets before they move. A next-generation AI financial operating system." },
       { name: "theme-color", content: "#0a0e1f" },
     ],
@@ -27,20 +40,32 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <SmoothScrollProvider>
-      <CursorGlow />
-      <FloatingNav />
-      <main className="relative">
-        <Hero />
-        <GlobalGlobeSection />
-        <AIPredictionEngine />
-        <LiveAnalytics />
-        <PortfolioIntelligence />
-        <NewsSentiment />
-        <CTA />
-      </main>
-      <Footer />
-    </SmoothScrollProvider>
+    <AppProvider>
+      <SmoothScrollProvider>
+        <CursorGlow />
+        <FloatingNav />
+        <main className="relative">
+          <Hero />
+          <GlobalGlobeSection />
+          <AIPredictionEngine />
+          <LiveAnalytics />
+          <PortfolioIntelligence />
+          <NewsSentiment />
+          <CTA />
+        </main>
+        <Footer />
+
+        {/* All modals — controlled by appStore */}
+        <DemoModal />
+        <RequestAccessModal />
+        <AuthModal />
+        <PredictionDetailModal />
+        <MarketDetailModal />
+
+        {/* Toast notifications */}
+        <ToastContainer />
+      </SmoothScrollProvider>
+    </AppProvider>
   );
 }
 
@@ -59,7 +84,7 @@ function CTA() {
             <span className="text-gradient">We give you the receiver.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-base text-muted-foreground">
-            Join the firms already trading with Neuralyx. Onboard in under 5 minutes — bring your portfolio, leave with an edge.
+            Join the firms already trading with PredictaFi. Onboard in under 5 minutes — bring your portfolio, leave with an edge.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <NeonButton>

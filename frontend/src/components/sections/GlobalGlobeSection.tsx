@@ -1,15 +1,18 @@
-/* eslint-disable prettier/prettier */
 import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { MARKETS } from "@/data/markets";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import { useApp } from "@/store/appStore";
+import type { Market } from "@/types";
 
 const Globe = lazy(() => import("@/components/globe/Globe").then((m) => ({ default: m.Globe })));
 
 export function GlobalGlobeSection() {
   const [mount, setMount] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const { openMarketDetail } = useApp();
+
   useEffect(() => {
     if (!ref.current) return;
     const io = new IntersectionObserver(
@@ -26,7 +29,7 @@ export function GlobalGlobeSection() {
         <SectionHeading
           eyebrow="Global Market Intelligence"
           title={<>One planet. <span className="text-gradient">Every market.</span></>}
-          description="A live, holographic view of global capital flows. Drag to rotate. Hover any hub to inspect index performance, AI confidence, and live sentiment."
+          description="A live, holographic view of global capital flows. Drag to rotate. Click any market to inspect live performance, AI confidence, and price history."
         />
 
         <div className="relative mt-12 grid gap-6 lg:grid-cols-[1.6fr_1fr]">
@@ -37,10 +40,10 @@ export function GlobalGlobeSection() {
             <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-white/20 to-transparent" />
             <div className="absolute left-4 top-4 z-10 flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
               <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--signal-buy)] animate-pulse-glow" />
-              Live · 8 markets · drag to rotate
+              Live · {MARKETS.length} markets · drag to rotate
             </div>
             <div className="absolute bottom-4 right-4 z-10 rounded-md border border-white/10 bg-black/30 px-2 py-1 font-mono text-[10px] text-muted-foreground backdrop-blur">
-              NEURALYX · GEO-INTEL · v4.2
+              PREDICTAFI · GEO-INTEL · v4.2
             </div>
             <div className="h-full w-full">
               {mount && (
@@ -51,7 +54,7 @@ export function GlobalGlobeSection() {
             </div>
           </div>
 
-          {/* HUD list */}
+          {/* HUD list — now clickable */}
           <div className="flex flex-col gap-3">
             {MARKETS.map((m, i) => (
               <motion.div
@@ -61,7 +64,10 @@ export function GlobalGlobeSection() {
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{ delay: i * 0.05, duration: 0.5 }}
               >
-                <GlassCard className="p-4">
+                <GlassCard
+                  className="cursor-pointer p-4 transition-all duration-200 hover:scale-[1.02] hover:bg-white/[0.06]"
+                  onClick={() => openMarketDetail(m as Market)}
+                >
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground">{m.code} · {m.city}</div>
@@ -83,7 +89,7 @@ export function GlobalGlobeSection() {
                   </div>
                   <div className="mt-2 flex items-center justify-between text-[10px] text-muted-foreground">
                     <span>{m.sentiment}</span>
-                    <span>AI {m.confidence}%</span>
+                    <span>AI {m.confidence}% · click to expand</span>
                   </div>
                 </GlassCard>
               </motion.div>
