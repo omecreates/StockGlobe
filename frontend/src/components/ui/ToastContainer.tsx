@@ -1,8 +1,10 @@
+/* eslint-disable prettier/prettier */
 // src/components/ui/ToastContainer.tsx
 import { AnimatePresence, motion } from "framer-motion";
 import { X, CheckCircle, AlertCircle, Info, AlertTriangle } from "lucide-react";
 import { useApp } from "@/store/appStore";
 import { cn } from "@/lib/utils";
+import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 
 const ICONS = {
   success: CheckCircle,
@@ -24,7 +26,7 @@ export function ToastContainer() {
   return (
     <div className="fixed bottom-6 right-6 z-[200] flex flex-col gap-3 pointer-events-none">
       <AnimatePresence mode="popLayout">
-        {state.toasts.map((toast) => {
+        {state.toasts.map((toast: { type: string | number; id: Key | null | undefined; title: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; message: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => {
           const Icon = ICONS[toast.type];
           return (
             <motion.div

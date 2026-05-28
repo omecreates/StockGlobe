@@ -1,19 +1,14 @@
+/* eslint-disable prettier/prettier */
 // src/components/ui/Skeletons.tsx
 import { cn } from "@/lib/utils";
 
 function Shimmer({ className }: { className?: string }) {
   return (
-    <div
-      className={cn(
-        "relative overflow-hidden rounded-xl bg-white/5",
-        className,
-      )}
-    >
+    <div className={cn("relative overflow-hidden rounded-xl bg-white/5", className)}>
       <div
         className="absolute inset-0 -translate-x-full animate-[shimmer_1.6s_infinite]"
         style={{
-          background:
-            "linear-gradient(90deg, transparent, oklch(1 0 0 / 6%), transparent)",
+          background: "linear-gradient(90deg, transparent, oklch(1 0 0 / 6%), transparent)",
         }}
       />
     </div>
@@ -22,7 +17,7 @@ function Shimmer({ className }: { className?: string }) {
 
 // Add shimmer keyframe to global styles (injected once)
 if (typeof document !== "undefined") {
-  const id = "predictafi-shimmer-style";
+  const id = "neuralyx-shimmer-style";
   if (!document.getElementById(id)) {
     const style = document.createElement("style");
     style.id = id;
@@ -84,7 +79,7 @@ export function NewsCardSkeleton() {
         <Shimmer className="h-3 w-10" />
       </div>
       <Shimmer className="h-5 w-full" />
-      <Shimmer className="h-4 w-3/4" />
+      <Shimmer className="h-4 w-3/4" />z
       <Shimmer className="h-1.5 w-full rounded-full" />
       <Shimmer className="h-12 w-full rounded-xl" />
       <div className="flex gap-1.5">

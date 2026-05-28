@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/components/sections/Hero.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // REPLACES the existing Hero.tsx entirely.
@@ -76,7 +77,7 @@ export function Hero() {
           transition={{ delay: 0.55, duration: 0.7 }}
           className="mx-auto mt-7 max-w-2xl text-center text-base text-muted-foreground md:text-lg"
         >
-          PredictaFi fuses 14B parameters of macro intelligence with sub-second order flow
+          Neuralyx fuses 14B parameters of macro intelligence with sub-second order flow
           signals to forecast every major asset on Earth — in real time, with full explainability.
         </motion.p>
 

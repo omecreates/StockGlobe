@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/components/sections/LiveAnalytics.tsx
 // REPLACES existing LiveAnalytics.tsx
 // What's new:
@@ -72,7 +73,7 @@ export function LiveAnalytics() {
         <SectionHeading
           eyebrow="Live Analytics"
           title={<>Real-time data. <span className="text-gradient">AI overlay.</span></>}
-          description="60 days of price history with PredictaFi AI forecast overlay. Select any ticker to inspect."
+          description="60 days of price history with Neuralyx AI forecast overlay. Select any ticker to inspect."
         />
 
         <div className="mt-14 space-y-5">

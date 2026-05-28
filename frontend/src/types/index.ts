@@ -1,5 +1,5 @@
+/* eslint-disable prettier/prettier */
 // ─── Core domain types ────────────────────────────────────────────────────────
-// These match the shapes in your existing data/ files exactly
 
 export type SignalDirection = "BUY" | "SELL" | "HOLD";
 export type MarketSentiment = "Bullish" | "Bearish" | "Neutral";
@@ -10,8 +10,8 @@ export interface Prediction {
   direction: SignalDirection;
   target: number;
   current: number;
-  confidence: number;
-  horizon: string;
+  confidence: number;  // 0–100
+  horizon: string;     // e.g. "30D"
   reason: string;
 }
 
@@ -43,7 +43,7 @@ export interface NewsItem {
   headline: string;
   source: string;
   time: string;
-  sentiment: number;
+  sentiment: number;  // -1.0 to 1.0
   insight: string;
   tickers: string[];
 }
@@ -62,6 +62,7 @@ export interface PortfolioData {
 }
 
 // ─── Auth types ───────────────────────────────────────────────────────────────
+
 export interface User {
   id: string;
   email: string;
@@ -70,7 +71,15 @@ export interface User {
   createdAt: string;
 }
 
+export interface AuthState {
+  user: User | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+}
+
 // ─── UI State types ───────────────────────────────────────────────────────────
+
 export interface ToastConfig {
   id: string;
   type: "success" | "error" | "info" | "warning";

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/components/sections/NewsSentiment.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // REPLACES existing NewsSentiment.tsx entirely.
@@ -116,7 +117,7 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
         {/* Ticker tags + expand toggle */}
         <div className="mt-3 flex items-center justify-between">
           <div className="flex flex-wrap gap-1.5">
-            {item.tickers.map((t: string) => (
+            {item.tickers.map((t) => (
               <span
                 key={t}
                 className="rounded-md border border-white/10 bg-white/5 px-1.5 py-0.5 font-mono text-[9px] tracking-wider text-muted-foreground"

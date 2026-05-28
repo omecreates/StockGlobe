@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/components/modals/AuthModal.tsx
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";

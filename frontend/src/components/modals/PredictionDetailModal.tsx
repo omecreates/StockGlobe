@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/components/modals/PredictionDetailModal.tsx
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -261,7 +262,7 @@ export function PredictionDetailModal() {
                 {/* Footer */}
                 <div className="flex items-center justify-between border-t border-white/5 px-6 py-4">
                   <div className="text-[10px] text-muted-foreground">
-                    Not financial advice · {prediction.horizon} horizon · Powered by PredictaFi ML
+                    Not financial advice · {prediction.horizon} horizon · Powered by Neuralyx ML
                   </div>
                   <a
                     href={`https://finance.yahoo.com/quote/${prediction.ticker}`}

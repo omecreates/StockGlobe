@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import type {
   Prediction,
   PricePoint,
@@ -22,7 +23,7 @@ class ApiError extends Error {
 }
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
-  const token = localStorage.getItem("predictafi_token");
+  const token = localStorage.getItem("neuralyx_token");
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -96,8 +97,8 @@ export const authApi = {
   me: () => apiFetch<User>("/auth/me"),
 
   logout: () => {
-    localStorage.removeItem("predictafi_token");
-    localStorage.removeItem("predictafi_user");
+    localStorage.removeItem("neuralyx_token");
+    localStorage.removeItem("neuralyx_user");
   },
 };
 

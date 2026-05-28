@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/components/modals/DemoModal.tsx
 import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -70,7 +71,7 @@ export function DemoModal() {
                     </div>
                     <div>
                       <div className="text-sm font-semibold font-display">
-                        PredictaFi Platform Demo
+                        Neuralyx Platform Demo
                       </div>
                       <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
                         AI Market Intelligence · v4.2
@@ -91,7 +92,7 @@ export function DemoModal() {
                   <iframe
                     className="absolute inset-0 h-full w-full"
                     src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&controls=1&rel=0"
-                    title="PredictaFi Demo"
+                    title="Neuralyx Demo"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />

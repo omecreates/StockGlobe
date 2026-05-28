@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/components/sections/AIPredictionEngine.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // REPLACES existing AIPredictionEngine.tsx entirely.

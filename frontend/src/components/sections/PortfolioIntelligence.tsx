@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/components/sections/PortfolioIntelligence.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // REPLACES existing PortfolioIntelligence.tsx entirely.

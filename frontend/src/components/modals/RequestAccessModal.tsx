@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/components/modals/RequestAccessModal.tsx
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -181,7 +182,7 @@ export function RequestAccessModal() {
                         className="space-y-4"
                       >
                         <p className="text-sm text-muted-foreground">
-                          Join firms already trading with PredictaFi. Limited seats available.
+                          Join firms already trading with Neuralyx. Limited seats available.
                         </p>
 
                         <Field label="Full name" error={errors.name}>

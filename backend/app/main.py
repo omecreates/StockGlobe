@@ -1,7 +1,12 @@
-# backend/app/main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.routers import predictions, market_data, news, portfolio, auth, access
+
+from app.routers import prediction
+from app.routers import market_data
+from app.routers import news
+from app.routers import portfolio
+from app.routers import auth
+from app.routers import access
 
 app = FastAPI(
     title="PredictaFi API",
@@ -24,13 +29,12 @@ app.add_middleware(
 )
 
 # ─── Register all routers ─────────────────────────────────────────────────────
-app.include_router(predictions.router, tags=["Predictions"])
-app.include_router(market_data.router, tags=["Market Data"])
-app.include_router(news.router,        tags=["News"])
-app.include_router(portfolio.router,   tags=["Portfolio"])
-app.include_router(auth.router,        tags=["Auth"])
-app.include_router(access.router,      tags=["Access"])
-
+app.include_router(prediction.router, prefix="/api", tags=["Predictions"])
+app.include_router(market_data.router, prefix="/api", tags=["Market Data"])
+app.include_router(news.router, prefix="/api", tags=["News"])
+app.include_router(portfolio.router, prefix="/api", tags=["Portfolio"])
+app.include_router(auth.router, prefix="/api", tags=["Auth"])
+app.include_router(access.router, prefix="/api", tags=["Access"])
 @app.get("/")
 def root():
     return {"status": "PredictaFi API running", "docs": "/docs"}

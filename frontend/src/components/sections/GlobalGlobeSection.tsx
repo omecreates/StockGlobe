@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { MARKETS } from "@/data/markets";
