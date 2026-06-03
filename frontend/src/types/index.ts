@@ -95,3 +95,19 @@ export interface ModalState {
   predictionDetail: Prediction | null;
   marketDetail: Market | null;
 }
+
+// ─── Watchlist types ──────────────────────────────────────────────────────────
+
+export interface WatchlistItem {
+  id: string;
+  ticker: string;
+  created_at: string;
+  // Enriched client-side
+  name?: string;
+  current?: number;
+  change_pct?: number;
+  signal?: SignalDirection;
+  confidence?: number;
+  sentiment?: number;
+}
+

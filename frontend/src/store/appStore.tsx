@@ -3,6 +3,7 @@ import {
   useContext,
   useReducer,
   useCallback,
+  useEffect,
   type ReactNode,
 } from "react";
 import type { User, ModalState, ToastConfig, Prediction, Market } from "@/types";
@@ -30,13 +31,8 @@ interface AppState {
 }
 
 const INITIAL_STATE: AppState = {
-  user: (() => {
-    try {
-      const raw = safeGet("predictafi_user");
-      return raw ? (JSON.parse(raw) as User) : null;
-    } catch { return null; }
-  })(),
-  token: safeGet("predictafi_token"),
+  user: null,
+  token: null,
   modals: {
     demo: false,
     requestAccess: false,
@@ -115,6 +111,21 @@ const AppContext = createContext<AppContextValue | null>(null);
 // ─── Provider ─────────────────────────────────────────────────────────────────
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+
+  // Hydrate from localStorage on client side only
+  useEffect(() => {
+    const token = safeGet("predictafi_token");
+    const rawUser = safeGet("predictafi_user");
+    if (token && rawUser) {
+      try {
+        const user = JSON.parse(rawUser) as User;
+        dispatch({ type: "AUTH_LOGIN", user, token });
+      } catch {
+        safeRemove("predictafi_token");
+        safeRemove("predictafi_user");
+      }
+    }
+  }, []);
 
   const openDemo = useCallback(() => dispatch({ type: "MODAL_OPEN_DEMO" }), []);
   const openRequestAccess = useCallback(() => dispatch({ type: "MODAL_OPEN_REQUEST_ACCESS" }), []);

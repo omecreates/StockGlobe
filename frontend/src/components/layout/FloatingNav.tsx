@@ -12,6 +12,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 import { useEffect, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import { LogIn, LogOut, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -110,11 +111,25 @@ export function FloatingNav() {
           <div className="flex items-center gap-2">
             {user ? (
               <>
-                <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-white/10 font-semibold text-[10px] uppercase">
-                    {user.name?.[0] ?? user.email[0]}
-                  </div>
-                  <span>{user.name ?? user.email}</span>
+                <div className="hidden md:flex items-center gap-1">
+                  <Link
+                    to="/dashboard"
+                    className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"
+                  >
+                    Dashboard
+                  </Link>
+                  <Link
+                    to="/watchlist"
+                    className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"
+                  >
+                    Watchlist
+                  </Link>
+                  <Link
+                    to="/profile"
+                    className="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors"
+                  >
+                    Profile
+                  </Link>
                 </div>
                 <button
                   onClick={handleLogout}
@@ -125,13 +140,21 @@ export function FloatingNav() {
                 </button>
               </>
             ) : (
-              <button
-                onClick={() => openAuth("login")}
-                className="hidden md:flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <LogIn className="h-3 w-3" />
-                Sign in
-              </button>
+              <>
+                <Link
+                  to="/login"
+                  className="hidden md:flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <LogIn className="h-3 w-3" />
+                  Sign in
+                </Link>
+                <Link
+                  to="/register"
+                  className="hidden md:inline-flex items-center justify-center rounded-md bg-primary px-4 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                >
+                  Register
+                </Link>
+              </>
             )}
 
             <button
@@ -175,19 +198,55 @@ export function FloatingNav() {
                   {l.label}
                 </button>
               ))}
-              <div className="border-t border-white/5 px-5 py-3 flex gap-2">
-                <button
-                  onClick={() => { setMobileOpen(false); openAuth("login"); }}
-                  className="flex-1 rounded-full border border-white/10 bg-white/5 py-2 text-xs text-muted-foreground"
-                >
-                  Sign in
-                </button>
-                <button
-                  onClick={() => { setMobileOpen(false); openRequestAccess(); }}
-                  className="flex-1 rounded-md bg-primary py-2 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                >
-                  Request Access
-                </button>
+              <div className="border-t border-white/5 px-5 py-3 flex flex-col gap-2">
+                {user ? (
+                  <>
+                    <Link
+                      to="/dashboard"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex w-full items-center px-2 py-2.5 text-sm text-muted-foreground hover:text-foreground"
+                    >
+                      Dashboard
+                    </Link>
+                    <Link
+                      to="/watchlist"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex w-full items-center px-2 py-2.5 text-sm text-muted-foreground hover:text-foreground"
+                    >
+                      Watchlist
+                    </Link>
+                    <Link
+                      to="/profile"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex w-full items-center px-2 py-2.5 text-sm text-muted-foreground hover:text-foreground"
+                    >
+                      Profile
+                    </Link>
+                    <button
+                      onClick={() => { setMobileOpen(false); handleLogout(); }}
+                      className="flex-1 rounded-full border border-white/10 bg-white/5 py-2 text-xs text-muted-foreground mt-1"
+                    >
+                      Sign out
+                    </button>
+                  </>
+                ) : (
+                  <div className="flex gap-2">
+                    <Link
+                      to="/login"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex-1 rounded-full border border-white/10 bg-white/5 py-2 text-xs text-muted-foreground text-center"
+                    >
+                      Sign in
+                    </Link>
+                    <Link
+                      to="/register"
+                      onClick={() => setMobileOpen(false)}
+                      className="flex-1 rounded-md bg-primary py-2 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 text-center"
+                    >
+                      Register
+                    </Link>
+                  </div>
+                )}
               </div>
             </motion.div>
           )}

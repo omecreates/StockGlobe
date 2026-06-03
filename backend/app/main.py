@@ -1,16 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.database import engine, Base
 from app.routers import prediction
 from app.routers import market_data
 from app.routers import news
 from app.routers import portfolio
 from app.routers import auth
 from app.routers import access
+from app.routers import watchlist
+
+# Initialize DB tables
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="PD Shaheed Ali API",
-    description="Backend API for PD Shaheed Ali's Portfolio",
+    title="StockGlobe API",
+    description="Backend API for StockGlobe with Auth and Watchlist",
     version="1.0.0"
 )
 
@@ -29,12 +34,14 @@ app.add_middleware(
 )
 
 # ─── Register all routers ─────────────────────────────────────────────────────
+app.include_router(auth.router, prefix="/api", tags=["Auth"])
+app.include_router(watchlist.router, prefix="/api", tags=["Watchlist"])
 app.include_router(prediction.router, prefix="/api", tags=["Predictions"])
 app.include_router(market_data.router, prefix="/api", tags=["Market Data"])
 app.include_router(news.router, prefix="/api", tags=["News"])
 app.include_router(portfolio.router, prefix="/api", tags=["Portfolio"])
-app.include_router(auth.router, prefix="/api", tags=["Auth"])
 app.include_router(access.router, prefix="/api", tags=["Access"])
+
 @app.get("/")
 def root():
-    return {"status": "PD Shaheed Ali API running", "docs": "/docs"}
+    return {"status": "StockGlobe API running", "docs": "/docs"}

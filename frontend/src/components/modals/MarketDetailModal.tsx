@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // src/components/modals/MarketDetailModal.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // Opens when user clicks a market row in GlobalGlobeSection.

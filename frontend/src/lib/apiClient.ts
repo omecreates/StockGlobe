@@ -23,7 +23,7 @@ class ApiError extends Error {
 }
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
-  const token = localStorage.getItem("neuralyx_token");
+  const token = localStorage.getItem("predictafi_token");
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -83,22 +83,22 @@ interface AuthResponse {
 
 export const authApi = {
   login: (payload: LoginPayload) =>
-    apiFetch<AuthResponse>("/auth/login", {
+    apiFetch<AuthResponse>("/api/auth/login", {
       method: "POST",
       body: JSON.stringify(payload),
     }),
 
   signup: (payload: SignupPayload) =>
-    apiFetch<AuthResponse>("/auth/signup", {
+    apiFetch<AuthResponse>("/api/auth/signup", {
       method: "POST",
       body: JSON.stringify(payload),
     }),
 
-  me: () => apiFetch<User>("/auth/me"),
+  me: () => apiFetch<User>("/api/auth/me"),
 
   logout: () => {
-    localStorage.removeItem("neuralyx_token");
-    localStorage.removeItem("neuralyx_user");
+    localStorage.removeItem("predictafi_token");
+    localStorage.removeItem("predictafi_user");
   },
 };
 
@@ -117,6 +117,32 @@ export const accessApi = {
       method: "POST",
       body: JSON.stringify(payload),
     }),
+};
+
+// ─── Watchlist API ────────────────────────────────────────────────────────────
+
+export interface WatchlistEntry {
+  id: string;
+  ticker: string;
+  created_at: string;
+}
+
+export const watchlistApi = {
+  getAll: () => apiFetch<WatchlistEntry[]>("/api/watchlist"),
+
+  add: (ticker: string) =>
+    apiFetch<WatchlistEntry>("/api/watchlist", {
+      method: "POST",
+      body: JSON.stringify({ ticker }),
+    }),
+
+  remove: (ticker: string) =>
+    apiFetch<{ message: string }>(`/api/watchlist/${ticker}`, {
+      method: "DELETE",
+    }),
+
+  insights: () =>
+    apiFetch<{ insights: string[] }>("/api/watchlist/insights"),
 };
 
 export { ApiError };
