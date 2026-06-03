@@ -9,12 +9,11 @@ import { cn } from "@/lib/utils";
 
 type Step = "form" | "submitting" | "success";
 
-const USE_CASES = [
-  "Algo trading / systematic funds",
-  "Portfolio management",
-  "Risk analytics",
-  "Research & due diligence",
-  "Retail investor",
+// Contact form subjects
+const SUBJECTS = [
+  "Job Opportunity",
+  "Freelance Project",
+  "Networking",
   "Other",
 ];
 
@@ -53,8 +52,8 @@ export function RequestAccessModal() {
   const [form, setForm] = useState<AccessRequestPayload>({
     name: "",
     email: "",
-    company: "",
-    use_case: USE_CASES[0],
+    subject: SUBJECTS[0],
+    message: "",
   });
 
   // Reset when closed
@@ -63,7 +62,7 @@ export function RequestAccessModal() {
       setTimeout(() => {
         setStep("form");
         setErrors({});
-        setForm({ name: "", email: "", company: "", use_case: USE_CASES[0] });
+        setForm({ name: "", email: "", subject: SUBJECTS[0], message: "" });
       }, 400);
     }
   }, [open]);
@@ -90,7 +89,8 @@ export function RequestAccessModal() {
     if (!form.email.trim()) e.email = "Email is required";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email))
       e.email = "Enter a valid email";
-    if (!form.company.trim()) e.company = "Company is required";
+    if (!form.subject.trim()) e.subject = "Subject is required";
+    if (!form.message.trim()) e.message = "Message is required";
     setErrors(e);
     return Object.keys(e).length === 0;
   }
@@ -156,7 +156,7 @@ export function RequestAccessModal() {
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-4 w-4 text-[color:var(--primary)]" />
                     <span className="font-display text-sm font-semibold">
-                      {step === "success" ? "You're on the list" : "Request Early Access"}
+                      {step === "success" ? "Message Sent" : "Contact Me"}
                     </span>
                   </div>
                   {step !== "submitting" && (
@@ -182,7 +182,7 @@ export function RequestAccessModal() {
                         className="space-y-4"
                       >
                         <p className="text-sm text-muted-foreground">
-                          Join firms already trading with Neuralyx. Limited seats available.
+                          Get in touch for opportunities, collaboration, or just to say hi.
                         </p>
 
                         <Field label="Full name" error={errors.name}>
@@ -208,32 +208,32 @@ export function RequestAccessModal() {
                           />
                         </Field>
 
-                        <Field label="Company / Institution" error={errors.company}>
-                          <input
-                            className={cn(inputClass, errors.company && "border-[color:var(--signal-sell)]/50")}
-                            placeholder="Acme Capital"
-                            value={form.company}
-                            onChange={(e) =>
-                              setForm((f) => ({ ...f, company: e.target.value }))
-                            }
-                          />
-                        </Field>
-
-                        <Field label="Primary use case">
+                        <Field label="Subject" error={errors.subject}>
                           <select
                             className={inputClass}
-                            value={form.use_case}
+                            value={form.subject}
                             onChange={(e) =>
-                              setForm((f) => ({ ...f, use_case: e.target.value }))
+                              setForm((f) => ({ ...f, subject: e.target.value }))
                             }
                             style={{ appearance: "none" }}
                           >
-                            {USE_CASES.map((u) => (
+                            {SUBJECTS.map((u) => (
                               <option key={u} value={u}>
                                 {u}
                               </option>
                             ))}
                           </select>
+                        </Field>
+
+                        <Field label="Message" error={errors.message}>
+                          <textarea
+                            className={cn(inputClass, "resize-none h-24", errors.message && "border-[color:var(--signal-sell)]/50")}
+                            placeholder="Hello, I'd like to discuss..."
+                            value={form.message}
+                            onChange={(e) =>
+                              setForm((f) => ({ ...f, message: e.target.value }))
+                            }
+                          />
                         </Field>
 
                         <button
@@ -246,13 +246,13 @@ export function RequestAccessModal() {
                             style={{ background: "var(--gradient-aurora)" }}
                           />
                           <span className="relative flex items-center justify-center gap-2">
-                            Request Access
+                            Send Message
                             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                           </span>
                         </button>
 
                         <p className="text-center text-[10px] text-muted-foreground">
-                          No spam. Reply directly with onboarding details.
+                          I'll get back to you as soon as possible.
                         </p>
                       </motion.div>
                     )}
@@ -267,7 +267,7 @@ export function RequestAccessModal() {
                       >
                         <Loader2 className="h-8 w-8 animate-spin text-[color:var(--primary)]" />
                         <div className="text-sm text-muted-foreground animate-pulse">
-                          Securing your spot…
+                          Sending message…
                         </div>
                       </motion.div>
                     )}
@@ -298,23 +298,22 @@ export function RequestAccessModal() {
 
                         <div>
                           <div className="font-display text-xl font-semibold">
-                            You're #{position} in line
+                            Message Received
                           </div>
                           <div className="mt-2 text-sm text-muted-foreground">
-                            We're onboarding firms in batches. You'll receive your invite at{" "}
-                            <span className="text-foreground">{form.email}</span> within 48 hours.
+                            Thank you for reaching out! I'll get back to you at{" "}
+                            <span className="text-foreground">{form.email}</span> shortly.
                           </div>
                         </div>
 
                         <div className="w-full rounded-xl border border-white/8 bg-white/[0.03] p-4 text-left">
                           <div className="text-[10px] uppercase tracking-widest text-muted-foreground mb-3">
-                            What you get
+                            What's next
                           </div>
                           {[
-                            "Full prediction engine access",
-                            "Real-time market intelligence",
-                            "Portfolio AI recommendations",
-                            "Dedicated onboarding session",
+                            "I'll review your message",
+                            "Expect a reply within 24-48 hours",
+                            "Let's build something great together",
                           ].map((item) => (
                             <div key={item} className="flex items-center gap-2 py-1.5">
                               <Check className="h-3.5 w-3.5 text-[color:var(--signal-buy)] shrink-0" />

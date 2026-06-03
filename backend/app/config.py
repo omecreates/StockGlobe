@@ -1,7 +1,7 @@
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    app_name: str = "Neuralyx API"
+    app_name: str = "PD Shaheed Ali API"
     debug: bool = True
     allowed_origins: list[str] = ["http://localhost:5173", "http://localhost:3000"]
 

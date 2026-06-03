@@ -72,7 +72,7 @@ export function LiveAnalytics() {
       <div className="mx-auto max-w-7xl px-6">
         <SectionHeading
           eyebrow="Live Analytics"
-          title={<>Real-time data. <span className="text-gradient">AI overlay.</span></>}
+          title={<>Real-time data. <span className="text-foreground font-semibold">AI overlay.</span></>}
           description="60 days of price history with Neuralyx AI forecast overlay. Select any ticker to inspect."
         />
 
@@ -88,18 +88,9 @@ export function LiveAnalytics() {
                   className={cn(
                     "rounded-full px-3.5 py-1.5 font-mono text-[11px] font-semibold uppercase tracking-[0.12em] transition-all",
                     ticker === t
-                      ? "text-background"
-                      : "border border-white/10 text-muted-foreground hover:text-foreground",
+                      ? "bg-primary text-primary-foreground"
+                      : "border border-border bg-transparent text-muted-foreground hover:bg-secondary",
                   )}
-                  style={
-                    ticker === t
-                      ? {
-                          background: "var(--gradient-aurora)",
-                          backgroundSize: "200% 200%",
-                          animation: "aurora-shift 8s ease infinite",
-                        }
-                      : undefined
-                  }
                 >
                   {t}
                 </button>
@@ -166,7 +157,7 @@ export function LiveAnalytics() {
           </div>
 
           {/* Chart */}
-          <GlassCard glow="primary" className="p-5 md:p-7">
+          <GlassCard className="p-5 md:p-7">
             <div className="mb-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
@@ -219,12 +210,12 @@ export function LiveAnalytics() {
                   >
                     <defs>
                       <linearGradient id="gPrice" x1="0" x2="0" y1="0" y2="1">
-                        <stop offset="0%" stopColor="oklch(0.82 0.17 200)" stopOpacity={0.5} />
-                        <stop offset="100%" stopColor="oklch(0.82 0.17 200)" stopOpacity={0} />
+                        <stop offset="0%" stopColor="var(--color-primary)" stopOpacity={0.2} />
+                        <stop offset="100%" stopColor="var(--color-primary)" stopOpacity={0} />
                       </linearGradient>
                       <linearGradient id="gForecast" x1="0" x2="0" y1="0" y2="1">
-                        <stop offset="0%" stopColor="oklch(0.62 0.24 295)" stopOpacity={0.4} />
-                        <stop offset="100%" stopColor="oklch(0.62 0.24 295)" stopOpacity={0} />
+                        <stop offset="0%" stopColor="var(--color-muted-foreground)" stopOpacity={0.2} />
+                        <stop offset="100%" stopColor="var(--color-muted-foreground)" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <CartesianGrid stroke="oklch(1 0 0 / 5%)" vertical={false} />
@@ -248,18 +239,12 @@ export function LiveAnalytics() {
                     />
                     <Area
                       type="monotone"
-                      dataKey="predicted"
-                      stroke="oklch(0.62 0.24 295)"
-                      strokeWidth={1.5}
-                      fill="url(#gForecast)"
+                      stroke="var(--color-muted-foreground)"
                       strokeDasharray="5 4"
                     />
                     <Area
                       type="monotone"
-                      dataKey="price"
-                      stroke="oklch(0.82 0.17 200)"
-                      strokeWidth={2}
-                      fill="url(#gPrice)"
+                      stroke="var(--color-primary)"
                     />
                   </AreaChart>
                 </ResponsiveContainer>

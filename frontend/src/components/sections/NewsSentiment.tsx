@@ -72,7 +72,7 @@ function NewsCard({ item, index }: { item: NewsItem; index: number }) {
         </div>
 
         {/* Headline */}
-        <h3 className="mt-3 text-sm font-semibold leading-snug text-foreground group-hover:text-gradient transition-all">
+        <h3 className="mt-3 text-sm font-semibold leading-snug text-foreground transition-all">
           {item.headline}
         </h3>
 
@@ -166,7 +166,7 @@ export function NewsSentiment() {
       <div className="mx-auto max-w-7xl px-6">
         <SectionHeading
           eyebrow="News Sentiment Engine"
-          title={<>Markets move on <span className="text-gradient">narrative.</span></>}
+          title={<>Markets move on <span className="text-foreground font-semibold">narrative.</span></>}
           description="Real-time NLP across 200+ financial sources. Every headline scored, every signal extracted."
         />
 
@@ -181,14 +181,9 @@ export function NewsSentiment() {
                 className={cn(
                   "rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] transition-all",
                   tickerFilter === t
-                    ? "text-background"
-                    : "border border-white/10 bg-white/[0.03] text-muted-foreground hover:text-foreground",
+                    ? "bg-primary text-primary-foreground"
+                    : "border border-border bg-transparent text-muted-foreground hover:bg-secondary",
                 )}
-                style={
-                  tickerFilter === t
-                    ? { background: "var(--gradient-aurora)", backgroundSize: "200% 200%", animation: "aurora-shift 8s ease infinite" }
-                    : undefined
-                }
               >
                 {t}
               </button>

@@ -107,8 +107,8 @@ export const authApi = {
 export interface AccessRequestPayload {
   name: string;
   email: string;
-  company: string;
-  use_case: string;
+  subject: string;
+  message: string;
 }
 
 export const accessApi = {

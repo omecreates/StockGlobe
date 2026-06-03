@@ -13,8 +13,8 @@ WAITLIST: list[dict] = []
 class AccessRequestPayload(BaseModel):
     name: str
     email: str
-    company: str
-    use_case: str
+    subject: str
+    message: str
 
 @router.post("/api/request-access")
 def request_access(payload: AccessRequestPayload):
@@ -30,8 +30,8 @@ def request_access(payload: AccessRequestPayload):
     WAITLIST.append({
         "name": payload.name,
         "email": payload.email.lower(),
-        "company": payload.company,
-        "use_case": payload.use_case,
+        "subject": payload.subject,
+        "message": payload.message,
         "submitted_at": time.strftime("%Y-%m-%dT%H:%M:%SZ"),
     })
 

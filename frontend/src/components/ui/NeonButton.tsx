@@ -10,28 +10,14 @@ export const NeonButton = forwardRef<HTMLButtonElement, NeonButtonProps>(
     <button
       ref={ref}
       className={cn(
-        "group relative inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium tracking-wide transition-all duration-300 cursor-pointer",
+        "group relative inline-flex items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-medium transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none",
         variant === "primary"
-          ? "text-background"
-          : "text-foreground border border-white/15 hover:border-white/30 bg-white/[0.03] hover:bg-white/[0.06] backdrop-blur",
+          ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+          : "bg-transparent border border-border text-foreground hover:bg-secondary",
         className,
       )}
       {...props}
     >
-      {variant === "primary" && (
-        <>
-          <span
-            aria-hidden
-            className="absolute inset-0 rounded-full opacity-100 transition-opacity duration-300 animate-aurora"
-            style={{ background: "var(--gradient-aurora)" }}
-          />
-          <span
-            aria-hidden
-            className="absolute -inset-px rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-md"
-            style={{ background: "var(--gradient-aurora)" }}
-          />
-        </>
-      )}
       <span className="relative z-10 flex items-center gap-2">{children}</span>
     </button>
   ),

@@ -7,3 +7,14 @@ class NewsItem(BaseModel):
     sentiment: float   # -1.0 to 1.0
     insight: str
     tickers: list[str]
+
+class LiveNewsItem(BaseModel):
+    title: str
+    source: str
+    url: str
+    published_at: str
+    image: str
+    sentiment: str       # Bullish, Neutral, Bearish
+    confidence: float    # 0.0 to 1.0
+    tickers: list[str]
+    summary: str         # AI Market Insight

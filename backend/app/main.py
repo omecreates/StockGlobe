@@ -9,8 +9,8 @@ from app.routers import auth
 from app.routers import access
 
 app = FastAPI(
-    title="PredictaFi API",
-    description="AI-powered stock market prediction API",
+    title="PD Shaheed Ali API",
+    description="Backend API for PD Shaheed Ali's Portfolio",
     version="1.0.0"
 )
 
@@ -37,4 +37,4 @@ app.include_router(auth.router, prefix="/api", tags=["Auth"])
 app.include_router(access.router, prefix="/api", tags=["Access"])
 @app.get("/")
 def root():
-    return {"status": "PredictaFi API running", "docs": "/docs"}
+    return {"status": "PD Shaheed Ali API running", "docs": "/docs"}

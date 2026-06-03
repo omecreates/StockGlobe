@@ -104,14 +104,14 @@ export function PortfolioIntelligence() {
       <div className="mx-auto max-w-7xl px-6">
         <SectionHeading
           eyebrow="Portfolio Intelligence"
-          title={<>AI-optimised <span className="text-gradient">allocation.</span></>}
+          title={<>AI-optimised <span className="text-foreground font-semibold">allocation.</span></>}
           description="Real-time portfolio analytics with AI-driven rebalancing recommendations. Know what to change — and why."
         />
 
         <div className="mt-14 grid gap-6 lg:grid-cols-[1fr_1.4fr]">
           {/* ── Left: Pie chart + stats ───────────────────────── */}
           <div className="space-y-4">
-            <GlassCard glow="primary" className="p-6">
+            <GlassCard className="p-6">
               {/* Stats */}
               <div className="grid grid-cols-3 gap-4 text-center mb-6">
                 <div>

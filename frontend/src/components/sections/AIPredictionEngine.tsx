@@ -26,25 +26,7 @@ import { PREDICTIONS as FALLBACK } from "@/data/predictions";
 import type { Prediction, SignalDirection } from "@/types";
 import { cn } from "@/lib/utils";
 
-// Neural background SVG (preserved from original)
-function NeuralBackground() {
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      <svg className="absolute inset-0 h-full w-full opacity-[0.07]" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <pattern id="neural" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-            <circle cx="40" cy="40" r="1.5" fill="currentColor" className="text-[color:var(--primary)]" />
-            <line x1="40" y1="40" x2="80" y2="80" stroke="currentColor" strokeWidth="0.4" className="text-[color:var(--primary)]" />
-            <line x1="40" y1="40" x2="0" y2="80" stroke="currentColor" strokeWidth="0.4" className="text-[color:var(--primary)]" />
-            <line x1="40" y1="40" x2="80" y2="0" stroke="currentColor" strokeWidth="0.4" className="text-[color:var(--primary)]" />
-            <line x1="40" y1="40" x2="0" y2="0" stroke="currentColor" strokeWidth="0.4" className="text-[color:var(--primary)]" />
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#neural)" />
-      </svg>
-    </div>
-  );
-}
+// Removed NeuralBackground
 
 type FilterType = "ALL" | SignalDirection;
 const FILTERS: FilterType[] = ["ALL", "BUY", "HOLD", "SELL"];
@@ -62,7 +44,7 @@ function PredictionCard({ p, index }: { p: Prediction; index: number }) {
       transition={{ delay: index * 0.07, duration: 0.5 }}
     >
       <GlassCard
-        className="group cursor-pointer p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_40px_oklch(0.75_0.22_245_/_20%)]"
+        className="group cursor-pointer transition-all duration-300 hover:scale-[1.01] hover:border-primary/50"
         onClick={() => openPredictionDetail(p)}
       >
         {/* Header */}
@@ -135,12 +117,11 @@ export function AIPredictionEngine() {
 
   return (
     <section id="predictions" className="relative py-24 md:py-32">
-      <NeuralBackground />
 
       <div className="relative mx-auto max-w-7xl px-6">
         <SectionHeading
           eyebrow="AI Prediction Engine"
-          title={<>Markets predicted. <span className="text-gradient">Risk quantified.</span></>}
+          title={<>Markets predicted. <span className="text-foreground font-semibold">Risk quantified.</span></>}
           description="Every signal is explainable. Every confidence score is calibrated. No black boxes — just pure model intelligence."
         />
 
@@ -154,10 +135,9 @@ export function AIPredictionEngine() {
                 className={cn(
                   "rounded-full px-3.5 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] transition-all",
                   filter === f
-                    ? "text-background"
-                    : "border border-white/10 text-muted-foreground hover:text-foreground",
+                    ? "bg-primary text-primary-foreground"
+                    : "border border-border bg-transparent text-muted-foreground hover:bg-secondary",
                 )}
-                style={filter === f ? { background: "var(--gradient-aurora)", backgroundSize: "200% 200%", animation: "aurora-shift 8s ease infinite" } : undefined}
               >
                 {f}
               </button>

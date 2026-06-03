@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import { feature } from "topojson-client";
 import type { Feature, FeatureCollection, Geometry } from "geojson";
 
-// Build a vibrant equirectangular world map texture from world-atlas topojson.
+// Build a clean, sleek equirectangular world map texture
 function buildEarthTexture(countries: FeatureCollection): THREE.CanvasTexture | null {
   if (typeof document === "undefined") return null;
   const w = 2048;
@@ -15,16 +15,12 @@ function buildEarthTexture(countries: FeatureCollection): THREE.CanvasTexture | 
   const ctx = canvas.getContext("2d");
   if (!ctx) return null;
 
-  // Ocean — vibrant deep blue/purple gradient
-  const ocean = ctx.createLinearGradient(0, 0, w, h);
-  ocean.addColorStop(0, "#0a1844");
-  ocean.addColorStop(0.5, "#15205c");
-  ocean.addColorStop(1, "#1a1248");
-  ctx.fillStyle = ocean;
+  // Ocean — dark, sleek grey/blue
+  ctx.fillStyle = "#0a0a0f";
   ctx.fillRect(0, 0, w, h);
 
   // Subtle latitude grid
-  ctx.strokeStyle = "rgba(120,180,255,0.07)";
+  ctx.strokeStyle = "rgba(255,255,255,0.03)";
   ctx.lineWidth = 1;
   for (let lat = -80; lat <= 80; lat += 20) {
     const y = ((90 - lat) / 180) * h;
@@ -57,28 +53,13 @@ function buildEarthTexture(countries: FeatureCollection): THREE.CanvasTexture | 
     }
   };
 
-  // Land fill — neon cyan→magenta gradient per feature based on centroid hue
-  const palette = ["#3ee0ff", "#7cf0d0", "#b48bff", "#ff7bc5", "#ffb15e", "#5fb3ff"];
-  ctx.lineWidth = 1.2;
+  // Land fill — subtle monotone color
+  ctx.lineWidth = 1.0;
 
-  countries.features.forEach((f: Feature, idx: number) => {
-    const color = palette[idx % palette.length];
-    ctx.fillStyle = color;
-    ctx.strokeStyle = "rgba(255,255,255,0.55)";
-    ctx.globalAlpha = 0.85;
-    drawGeom(f.geometry);
-  });
-  ctx.globalAlpha = 1;
-
-  // Glow pass — re-stroke borders brighter
-  ctx.strokeStyle = "rgba(180,230,255,0.4)";
-  ctx.lineWidth = 0.6;
   countries.features.forEach((f: Feature) => {
-    if (f.geometry.type === "Polygon") {
-      f.geometry.coordinates.forEach((ring) => { drawRing(ring); ctx.stroke(); });
-    } else if (f.geometry.type === "MultiPolygon") {
-      f.geometry.coordinates.forEach((poly) => poly.forEach((ring) => { drawRing(ring); ctx.stroke(); }));
-    }
+    ctx.fillStyle = "#1a1a24";
+    ctx.strokeStyle = "rgba(120, 140, 180, 0.4)"; // subtle blue/grey outline
+    drawGeom(f.geometry);
   });
 
   const tex = new THREE.CanvasTexture(canvas);
@@ -97,6 +78,7 @@ export function EarthMesh() {
     (async () => {
       try {
         const res = await fetch("https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json");
+        if (!res.ok) throw new Error("Fetch failed");
         const topo = await res.json();
         // @ts-expect-error topojson types are loose
         const geo = feature(topo, topo.objects.countries) as FeatureCollection;
@@ -104,41 +86,56 @@ export function EarthMesh() {
         const tex = buildEarthTexture(geo);
         if (tex) setTexture(tex);
       } catch (e) {
-        console.error("Failed to load world map", e);
+        console.error("Failed to load world map, using fallback", e);
+        // Fallback: draw an empty grid texture if fetch fails
+        if (!cancelled) {
+          const canvas = document.createElement("canvas");
+          canvas.width = 1024; canvas.height = 512;
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            ctx.fillStyle = "#0a0a0f";
+            ctx.fillRect(0, 0, 1024, 512);
+            ctx.strokeStyle = "rgba(255,255,255,0.05)";
+            for (let i=0; i<1024; i+=32) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,512); ctx.stroke(); }
+            for (let i=0; i<512; i+=32) { ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(1024,i); ctx.stroke(); }
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.colorSpace = THREE.SRGBColorSpace;
+            setTexture(tex);
+          }
+        }
       }
     })();
     return () => { cancelled = true; };
   }, []);
 
   useFrame((_, delta) => {
-    if (ref.current) ref.current.rotation.y += delta * 0.05;
+    if (ref.current) ref.current.rotation.y += delta * 0.02; // Slower, more elegant rotation
   });
 
   return (
     <group>
-      {/* Base sphere with real country map */}
+      {/* Base sphere with clean map */}
       <mesh ref={ref}>
-        <sphereGeometry args={[1, 96, 96]} />
+        <sphereGeometry args={[1, 64, 64]} />
         <meshStandardMaterial
           color={new THREE.Color("#ffffff")}
-          emissive={new THREE.Color("#2a3a8a")}
-          emissiveIntensity={0.35}
+          emissive={new THREE.Color("#05050a")}
+          emissiveIntensity={0.2}
           map={texture ?? undefined}
-          roughness={0.6}
-          metalness={0.15}
+          roughness={0.7}
+          metalness={0.1}
         />
       </mesh>
-      {/* Atmosphere */}
-      <mesh scale={1.13}>
+      {/* Subtle Atmosphere */}
+      <mesh scale={1.05}>
         <sphereGeometry args={[1, 48, 48]} />
         <shaderMaterial
           transparent
           side={THREE.BackSide}
           depthWrite={false}
           uniforms={{
-            uColor: { value: new THREE.Color("#5fd6ff") },
-            uColor2: { value: new THREE.Color("#d97bff") },
-            uColor3: { value: new THREE.Color("#ff7bc5") },
+            uColor: { value: new THREE.Color("#2a4a6a") },
+            uColor2: { value: new THREE.Color("#1a2a3a") },
           }}
           vertexShader={`
             varying vec3 vNormal;
@@ -151,20 +148,13 @@ export function EarthMesh() {
             varying vec3 vNormal;
             uniform vec3 uColor;
             uniform vec3 uColor2;
-            uniform vec3 uColor3;
             void main() {
-              float intensity = pow(0.72 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
-              vec3 col = mix(uColor, uColor2, intensity);
-              col = mix(col, uColor3, intensity * 0.5);
-              gl_FragColor = vec4(col, intensity * 1.4);
+              float intensity = pow(0.65 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.5);
+              vec3 col = mix(uColor2, uColor, intensity);
+              gl_FragColor = vec4(col, intensity * 0.8);
             }
           `}
         />
-      </mesh>
-      {/* Inner glow */}
-      <mesh scale={1.025}>
-        <sphereGeometry args={[1, 48, 48]} />
-        <meshBasicMaterial color="#4d8eff" transparent opacity={0.12} />
       </mesh>
     </group>
   );

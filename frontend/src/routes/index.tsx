@@ -8,6 +8,7 @@ import { GlobalGlobeSection } from "@/components/sections/GlobalGlobeSection";
 import { AIPredictionEngine } from "@/components/sections/AIPredictionEngine";
 import { LiveAnalytics } from "@/components/sections/LiveAnalytics";
 import { PortfolioIntelligence } from "@/components/sections/PortfolioIntelligence";
+import { LiveNewsIntelligence } from "@/components/sections/LiveNewsIntelligence";
 import { NewsSentiment } from "@/components/sections/NewsSentiment";
 import { NeonButton } from "@/components/ui/NeonButton";
 import { ArrowUpRight } from "lucide-react";
@@ -28,13 +29,13 @@ import { ToastContainer } from "@/components/ui/ToastContainer";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Neuralyx — AI Stock Market Intelligence" },
+      { title: "StockGlobe — AI Stock Market Intelligence" },
       {
         name: "description",
         content:
-          "Neuralyx is the AI intelligence layer for global markets. Predict every major asset on Earth in real time with full explainability.",
+          "StockGlobe is the AI intelligence layer for global markets. Predict every major asset on Earth in real time with full explainability.",
       },
-      { property: "og:title", content: "Neuralyx — AI Stock Market Intelligence" },
+      { property: "og:title", content: "StockGlobe — AI Stock Market Intelligence" },
       {
         property: "og:description",
         content:
@@ -58,6 +59,7 @@ function Index() {
           <AIPredictionEngine />
           <LiveAnalytics />
           <PortfolioIntelligence />
+          <LiveNewsIntelligence />
           <NewsSentiment />
           <CTA />
         </main>
@@ -81,22 +83,17 @@ function CTA() {
   return (
     <section id="cta" className="relative px-6 py-32">
       <div className="relative mx-auto max-w-5xl overflow-hidden rounded-3xl border border-white/10 p-12 text-center md:p-20">
-        <div aria-hidden className="absolute inset-0 ring-grid opacity-30" />
-        <div
-          aria-hidden
-          className="absolute inset-0 animate-aurora opacity-25"
-          style={{ background: "var(--gradient-aurora)" }}
-        />
+        <div aria-hidden className="absolute inset-0 bg-secondary/50" />
         <div className="relative">
-          <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/30 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-foreground backdrop-blur">
+          <div className="mx-auto inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-foreground">
             Early access · Limited
           </div>
           <h2 className="mt-6 font-display text-4xl font-semibold leading-tight md:text-6xl">
             The market is a signal. <br />
-            <span className="text-gradient">We give you the receiver.</span>
+            <span className="text-foreground font-semibold">We give you the receiver.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-base text-muted-foreground">
-            Join the firms already trading with Neuralyx. Onboard in under 5 minutes — bring your
+            Join the firms already trading with StockGlobe. Onboard in under 5 minutes — bring your
             portfolio, leave with an edge.
           </p>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
