@@ -239,12 +239,16 @@ export function LiveAnalytics() {
                     />
                     <Area
                       type="monotone"
+                      dataKey="predicted"
                       stroke="var(--color-muted-foreground)"
                       strokeDasharray="5 4"
+                      fill="url(#gForecast)"
                     />
                     <Area
                       type="monotone"
+                      dataKey="price"
                       stroke="var(--color-primary)"
+                      fill="url(#gPrice)"
                     />
                   </AreaChart>
                 </ResponsiveContainer>

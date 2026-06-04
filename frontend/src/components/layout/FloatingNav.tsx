@@ -20,12 +20,13 @@ import { useApp } from "@/store/appStore";
 import { useActiveSection, useScrollTo } from "@/hooks/useApi";
 import { authApi } from "@/lib/apiClient";
 
-const SECTION_IDS = ["top", "globe", "predictions", "analytics", "portfolio", "sentiment"];
+const SECTION_IDS = ["top", "globe", "predictions", "analytics", "movers", "portfolio", "sentiment"];
 
 const LINKS = [
   { label: "Intelligence", id: "globe" },
   { label: "Predictions", id: "predictions" },
   { label: "Analytics",   id: "analytics" },
+  { label: "Market Movers", id: "movers" },
   { label: "Portfolio",   id: "portfolio" },
   { label: "Sentiment",   id: "sentiment" },
 ];

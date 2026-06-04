@@ -46,6 +46,9 @@ export const marketApi = {
   predictions: (tickers = "NVDA,TSLA,AAPL,META,AMZN,BABA") =>
     apiFetch<Prediction[]>(`/api/predictions?tickers=${tickers}`),
 
+  predictionsTop50: () =>
+    apiFetch<Prediction[]>("/api/predictions/top50"),
+
   priceSeries: (ticker = "SPY", days = 60) =>
     apiFetch<PricePoint[]>(`/api/price-series?ticker=${ticker}&days=${days}`),
 

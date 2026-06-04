@@ -2,6 +2,7 @@
 // src/components/modals/MarketDetailModal.tsx
 // ─────────────────────────────────────────────────────────────────────────────
 // Opens when user clicks a market row in GlobalGlobeSection.
+
 // Shows live price series chart + market metadata.
 // ─────────────────────────────────────────────────────────────────────────────
 

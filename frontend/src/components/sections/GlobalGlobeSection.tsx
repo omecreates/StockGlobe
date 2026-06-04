@@ -1,62 +1,35 @@
-/* eslint-disable prettier/prettier */
-import { Suspense, lazy, useEffect, useRef, useState, useMemo } from "react";
-import { motion } from "framer-motion";
-import { Brain, TrendingUp, TrendingDown, Activity, ActivitySquare } from "lucide-react";
-import { MARKETS } from "@/data/markets";
+import React, { Suspense, lazy, useEffect, useRef, useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Brain, TrendingUp, TrendingDown, Activity, Globe2, ShieldAlert, BarChart3, Clock, X, ArrowRightLeft } from "lucide-react";
+import { MARKETS, type Market } from "@/data/markets";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { AnimatedStat } from "@/components/ui/AnimatedStat";
-import { MiniSparkline } from "@/components/ui/MiniSparkline";
-import { useApp } from "@/store/appStore";
-import type { Market } from "@/types";
+import { useGlobeStore } from "@/store/globeStore";
 import { cn } from "@/lib/utils";
 
 const Globe = lazy(() => import("@/components/globe/Globe").then((m) => ({ default: m.Globe })));
 
-// A simple static list of rotating AI insights for the dashboard
 const AI_INSIGHTS = [
-  "Global liquidity shifting from US tech to emerging market industrials. Momentum factor strengthening.",
-  "European indices showing resilience despite ECB rate trajectory uncertainty.",
-  "Asian markets processing stimulus impact; volatility expected in the near term.",
-  "Cross-border capital flows indicate defensive positioning ahead of key macroeconomic prints.",
+  "US markets are leading global momentum with tech sector driving massive inflows.",
+  "Asian markets show weakening sentiment as regulatory concerns weigh on Hong Kong.",
+  "European markets remain neutral despite volatility in currency markets.",
+  "Capital flowing heavily from emerging markets into North American safe havens.",
+  "Global risk index elevated due to sudden spikes in energy sector volatility."
 ];
 
 export function GlobalGlobeSection() {
   const [mount, setMount] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const { openMarketDetail } = useApp();
-
-  // Compute derived metrics
-  const metrics = useMemo(() => {
-    let bullish = 0;
-    let bearish = 0;
-    let totalConf = 0;
-    let topGainer = MARKETS[0];
-    let topLoser = MARKETS[0];
-
-    MARKETS.forEach(m => {
-      if (m.sentiment === "Bullish") bullish++;
-      if (m.sentiment === "Bearish") bearish++;
-      totalConf += m.confidence;
-      if (m.change > topGainer.change) topGainer = m;
-      if (m.change < topLoser.change) topLoser = m;
-    });
-
-    return {
-      bullish,
-      bearish,
-      avgConf: totalConf / MARKETS.length,
-      topGainer,
-      topLoser
-    };
-  }, []);
-
-  // Simple rotation for AI Insight
+  const { heatmapMode, setHeatmapMode, selectedMarkets, clearSelection } = useGlobeStore();
   const [insightIndex, setInsightIndex] = useState(0);
+  const [timestamp, setTimestamp] = useState("");
+
   useEffect(() => {
+    setTimestamp(new Date().toLocaleTimeString());
     const interval = setInterval(() => {
       setInsightIndex((i) => (i + 1) % AI_INSIGHTS.length);
-    }, 10000);
+      setTimestamp(new Date().toLocaleTimeString());
+    }, 8000);
     return () => clearInterval(interval);
   }, []);
 
@@ -70,184 +43,326 @@ export function GlobalGlobeSection() {
     return () => io.disconnect();
   }, []);
 
-  return (
-    <section id="globe" ref={ref} className="relative py-24 md:py-32">
-      <div className="mx-auto max-w-[1400px] px-6">
-        <SectionHeading
-          eyebrow="Global Market Intelligence"
-          title={<>One planet. <span className="text-foreground font-semibold">Every market.</span></>}
-          description="A live, holographic view of global capital flows. Monitor worldwide momentum and AI confidence in real-time."
-        />
+  const selectedData = useMemo(() => 
+    selectedMarkets.map(code => MARKETS.find(m => m.code === code)).filter(Boolean) as Market[], 
+  [selectedMarkets]);
 
-        <div className="relative mt-12 grid gap-6 lg:grid-cols-[1.8fr_1fr]">
-          {/* ── Main View (Left Column) ───────────────────────── */}
+  return (
+    <section id="globe" ref={ref} className="relative py-24 md:py-32 bg-background">
+      <div className="mx-auto max-w-[1500px] px-6">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+          <SectionHeading
+            eyebrow="AI Command Center"
+            title={<>Global <span className="text-primary font-semibold">Intelligence</span></>}
+            description="Real-time Bloomberg-style terminal for global capital flows, sentiment, and AI market predictions."
+          />
+          <div className="flex items-center gap-4 bg-white/5 p-1 rounded-full border border-white/10">
+            <button
+              onClick={() => setHeatmapMode(false)}
+              className={cn("px-4 py-1.5 rounded-full text-sm font-medium transition-all", !heatmapMode ? "bg-primary text-primary-foreground shadow-lg" : "text-muted-foreground hover:text-foreground")}
+            >
+              <Globe2 className="w-4 h-4 inline-block mr-1.5" /> Photorealistic
+            </button>
+            <button
+              onClick={() => setHeatmapMode(true)}
+              className={cn("px-4 py-1.5 rounded-full text-sm font-medium transition-all", heatmapMode ? "bg-rose-500 text-white shadow-lg" : "text-muted-foreground hover:text-foreground")}
+            >
+              <Activity className="w-4 h-4 inline-block mr-1.5" /> Heatmap
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-6">
+          {/* Left Column - Globe & Footer */}
           <div className="flex flex-col gap-6">
-            
-            {/* Globe canvas */}
-            <div className="relative h-[480px] w-full overflow-hidden rounded-xl border border-border bg-card shadow-sm md:h-[560px]">
-              <div className="absolute left-4 top-4 z-10 flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--signal-buy)] animate-pulse-glow" />
-                Live · {MARKETS.length} markets · drag to rotate
+            <div className="relative h-[500px] md:h-[600px] w-full rounded-2xl border border-white/10 bg-card overflow-hidden shadow-2xl">
+              {/* Globe Overlay HUD */}
+              <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+                <div className="flex items-center gap-2 bg-background/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10 text-[10px] font-mono tracking-widest text-muted-foreground">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  SYSTEM ACTIVE
+                </div>
               </div>
-              <div className="absolute bottom-4 right-4 z-10 rounded bg-background px-2 py-1 font-mono text-[10px] text-muted-foreground border border-border">
-                PREDICTAFI · GEO-INTEL · v4.2
+              <div className="absolute bottom-4 left-4 right-4 z-10">
+                <GlassCard className="p-4 bg-background/60 backdrop-blur-xl border-white/10 flex flex-col md:flex-row items-center gap-4">
+                  <Brain className="w-8 h-8 text-primary opacity-50 shrink-0" />
+                  <div className="flex-1">
+                    <div className="text-[10px] uppercase tracking-widest text-primary font-semibold mb-1">AI Global Observation</div>
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={insightIndex}
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        className="text-sm font-medium text-foreground"
+                      >
+                        {AI_INSIGHTS[insightIndex]}
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
+                </GlassCard>
               </div>
-              <div className="h-full w-full">
-                {mount && (
-                  <Suspense fallback={null}>
-                    <Globe />
-                  </Suspense>
-                )}
-              </div>
+
+              {/* 3D Canvas */}
+              {mount && (
+                <Suspense fallback={<div className="flex items-center justify-center h-full text-muted-foreground">Initializing Spatial Engine...</div>}>
+                  <Globe />
+                </Suspense>
+              )}
             </div>
 
-            {/* Global Market Summary KPI Panel */}
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              <GlassCard className="p-5 flex flex-col justify-between">
-                <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-3">
-                  <TrendingUp className="h-3.5 w-3.5 text-[color:var(--signal-buy)]" />
-                  Top Gainer
-                </div>
-                <div>
-                  <div className="font-display text-xl font-semibold">{metrics.topGainer.code}</div>
-                  <div className="text-sm font-semibold text-[color:var(--signal-buy)]">
-                    +{metrics.topGainer.change.toFixed(2)}%
-                  </div>
-                </div>
+            {/* Real-time Footer Stats */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <GlassCard className="p-4 bg-white/[0.02]">
+                <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase tracking-wider mb-2"><Clock className="w-3 h-3" /> Updated</div>
+                <div className="font-mono text-lg">{timestamp}</div>
               </GlassCard>
-
-              <GlassCard className="p-5 flex flex-col justify-between">
-                <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-3">
-                  <TrendingDown className="h-3.5 w-3.5 text-[color:var(--signal-sell)]" />
-                  Top Loser
-                </div>
-                <div>
-                  <div className="font-display text-xl font-semibold">{metrics.topLoser.code}</div>
-                  <div className="text-sm font-semibold text-[color:var(--signal-sell)]">
-                    {metrics.topLoser.change.toFixed(2)}%
-                  </div>
-                </div>
+              <GlassCard className="p-4 bg-white/[0.02]">
+                <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase tracking-wider mb-2"><Globe2 className="w-3 h-3" /> Global Status</div>
+                <div className="font-semibold text-emerald-400">MARKETS OPEN</div>
               </GlassCard>
-
-              <GlassCard className="p-5 flex flex-col justify-between">
-                <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-3">
-                  <Activity className="h-3.5 w-3.5 text-[color:var(--signal-hold)]" />
-                  Market Breadth
-                </div>
-                <div className="flex items-end gap-3">
-                  <div>
-                    <div className="font-display text-xl font-semibold text-[color:var(--signal-buy)]">{metrics.bullish}</div>
-                    <div className="text-[10px] text-muted-foreground">BULLISH</div>
-                  </div>
-                  <div className="pb-1 text-muted-foreground border-l border-border pl-3">
-                    <div className="font-display text-xl font-semibold text-[color:var(--signal-sell)]">{metrics.bearish}</div>
-                    <div className="text-[10px] text-muted-foreground">BEARISH</div>
-                  </div>
-                </div>
+              <GlassCard className="p-4 bg-white/[0.02]">
+                <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase tracking-wider mb-2"><ShieldAlert className="w-3 h-3" /> Risk Index</div>
+                <div className="font-display text-xl text-yellow-400">Elevated</div>
               </GlassCard>
-
-              <GlassCard className="p-5 flex flex-col justify-between">
-                <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-muted-foreground mb-3">
-                  <Brain className="h-3.5 w-3.5 text-[color:var(--primary)]" />
-                  Avg Confidence
-                </div>
-                <div className="flex items-baseline gap-1">
-                  <div className="font-display text-3xl font-semibold">
-                    <AnimatedStat value={metrics.avgConf} decimals={0} />
-                  </div>
-                  <span className="text-sm text-muted-foreground">%</span>
-                </div>
+              <GlassCard className="p-4 bg-white/[0.02]">
+                <div className="flex items-center gap-2 text-muted-foreground text-xs uppercase tracking-wider mb-2"><Activity className="w-3 h-3" /> Fear / Greed</div>
+                <div className="font-display text-xl text-emerald-400">Greed (74)</div>
               </GlassCard>
             </div>
           </div>
 
-          {/* ── Intelligence Feed (Right Column) ──────────────── */}
-          <div className="flex flex-col gap-6">
-            
-            {/* Live AI Insights Panel */}
-            <GlassCard className="p-5 shrink-0 bg-primary/5 border-primary/20">
-              <div className="flex items-center gap-2 mb-3">
-                <Brain className="h-4 w-4 text-[color:var(--primary)]" />
-                <div className="text-[10px] uppercase tracking-[0.2em] font-semibold text-primary">
-                  Live AI Insight
-                </div>
-              </div>
-              <motion.div
-                key={insightIndex}
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -5 }}
-                transition={{ duration: 0.5 }}
-                className="text-sm leading-relaxed text-foreground"
-              >
-                {AI_INSIGHTS[insightIndex]}
-              </motion.div>
-            </GlassCard>
-
-            {/* Watchlist Header */}
-            <div className="flex items-center justify-between px-1">
-              <div className="text-[10px] uppercase tracking-[0.2em] font-semibold text-muted-foreground">
-                Global Watchlist
-              </div>
-              <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                {MARKETS.length} Indices
-              </div>
-            </div>
-
-            {/* Scrollable Watchlist Container */}
-            <div className="relative flex-1 min-h-[400px] max-h-[600px] overflow-hidden rounded-xl border border-border bg-card">
-              <div className="absolute inset-0 overflow-y-auto p-3 flex flex-col gap-2 scrollbar-thin scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20 scrollbar-track-transparent">
-                {MARKETS.map((m, i) => (
-                  <motion.div
-                    key={m.code}
-                    initial={{ opacity: 0, x: 20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: (i % 8) * 0.05, duration: 0.4 }}
-                  >
-                    <div
-                      className="group cursor-pointer rounded-lg border border-transparent p-3 transition-all duration-200 hover:border-border hover:bg-white/[0.03]"
-                      onClick={() => openMarketDetail(m as Market)}
-                    >
-                      <div className="flex items-center justify-between">
-                        {/* Left: Info */}
-                        <div className="w-[40%]">
-                          <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
-                            {m.code} · {m.city}
-                          </div>
-                          <div className="font-display text-sm font-semibold truncate" title={m.index}>
-                            {m.index}
-                          </div>
-                        </div>
-
-                        {/* Middle: Sparkline */}
-                        <div className="flex-1 flex justify-center opacity-70 transition-opacity group-hover:opacity-100">
-                          <MiniSparkline change={m.change} />
-                        </div>
-
-                        {/* Right: Metrics */}
-                        <div className="w-[30%] text-right flex flex-col items-end">
-                          <div className={cn(
-                            "font-display text-sm font-semibold tabular-nums",
-                            m.change >= 0 ? "text-[color:var(--signal-buy)]" : "text-[color:var(--signal-sell)]"
-                          )}>
-                            {m.change >= 0 ? "+" : ""}{m.change.toFixed(2)}%
-                          </div>
-                          <div className="mt-1 flex items-center gap-1.5 text-[10px] text-muted-foreground">
-                            <span>AI {m.confidence}%</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-              {/* Fade out bottom of scroll list */}
-              <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-card to-transparent" />
-            </div>
+          {/* Right Column - Dynamic Side Panel */}
+          <div className="relative flex flex-col h-full min-h-[600px]">
+            <AnimatePresence mode="wait">
+              {selectedData.length === 0 && (
+                <motion.div key="dashboard" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="flex flex-col gap-6 h-full">
+                  <DefaultDashboard />
+                </motion.div>
+              )}
+              {selectedData.length === 1 && (
+                <motion.div key="single" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="h-full">
+                  <SingleMarketPanel market={selectedData[0]} onClose={clearSelection} />
+                </motion.div>
+              )}
+              {selectedData.length === 2 && (
+                <motion.div key="compare" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="h-full">
+                  <ComparisonPanel m1={selectedData[0]} m2={selectedData[1]} onClose={clearSelection} />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function DefaultDashboard() {
+  return (
+    <GlassCard className="flex-1 p-6 flex flex-col gap-6 bg-card/40 overflow-hidden">
+      <div className="flex items-center gap-2 text-primary font-semibold uppercase tracking-widest text-xs border-b border-white/10 pb-4">
+        <BarChart3 className="w-4 h-4" /> Regional Overview
+      </div>
+      
+      <div className="space-y-4">
+        <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Top Performing Regions</h4>
+        {[
+          { name: "North America", perf: "+1.8%", flow: "High Inflow" },
+          { name: "Europe", perf: "+0.4%", flow: "Neutral" },
+          { name: "Asia Pacific", perf: "-0.9%", flow: "Outflow" }
+        ].map(r => (
+          <div key={r.name} className="flex justify-between items-center p-3 rounded-lg bg-white/5 border border-white/5">
+            <span className="font-medium">{r.name}</span>
+            <div className="text-right">
+              <div className={r.perf.startsWith('+') ? "text-emerald-400 font-bold" : "text-rose-400 font-bold"}>{r.perf}</div>
+              <div className="text-[10px] text-muted-foreground uppercase">{r.flow}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 p-5 rounded-xl bg-gradient-to-br from-rose-500/10 to-orange-500/10 border border-rose-500/20">
+        <h4 className="text-sm font-semibold text-rose-400 uppercase tracking-wider mb-2 flex items-center gap-2"><ShieldAlert className="w-4 h-4"/> Key Risks Detected</h4>
+        <ul className="space-y-2 text-sm text-muted-foreground">
+          <li>• Volatility spike in Chinese real estate sector</li>
+          <li>• Yield curve inversion persisting in US markets</li>
+          <li>• Supply chain disruptions affecting Euro industrials</li>
+        </ul>
+      </div>
+
+      <div className="flex-1 flex flex-col justify-end text-center p-6 border-t border-white/10 mt-6">
+        <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-3 animate-pulse">
+          <Globe2 className="w-6 h-6 text-muted-foreground" />
+        </div>
+        <p className="text-sm text-muted-foreground">Click any market hub on the globe to view detailed AI analysis.</p>
+      </div>
+    </GlassCard>
+  );
+}
+
+function SingleMarketPanel({ market, onClose }: { market: Market, onClose: () => void }) {
+  const isPositive = market.change >= 0;
+  return (
+    <GlassCard className="h-full flex flex-col bg-card/60 border-primary/20 relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-1" style={{ background: isPositive ? '#10b981' : '#f43f5e' }} />
+      <button onClick={onClose} className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors">
+        <X className="w-4 h-4 text-muted-foreground" />
+      </button>
+
+      <div className="p-6 border-b border-white/10">
+        <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-1">{market.code} HUB</div>
+        <h2 className="text-3xl font-display font-bold">{market.name}</h2>
+        <div className="text-sm text-muted-foreground">{market.index} · {market.city}</div>
+        
+        <div className="flex items-end gap-4 mt-6">
+          <div>
+            <div className="text-[10px] uppercase text-muted-foreground tracking-wider mb-1">Index Value</div>
+            <div className="text-4xl font-display font-semibold tabular-nums">{market.value.toLocaleString()}</div>
+          </div>
+          <div className={`pb-1 text-xl font-semibold flex items-center gap-1 ${isPositive ? 'text-emerald-400' : 'text-rose-400'}`}>
+            {isPositive ? <TrendingUp className="w-5 h-5"/> : <TrendingDown className="w-5 h-5"/>}
+            {isPositive ? "+" : ""}{market.change.toFixed(2)}%
+          </div>
+        </div>
+      </div>
+
+      <div className="p-6 flex-1 overflow-y-auto custom-scrollbar space-y-6">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+            <div className="text-[10px] uppercase text-muted-foreground tracking-wider mb-2 flex items-center gap-2"><Brain className="w-3 h-3 text-primary"/> AI Confidence</div>
+            <div className="text-2xl font-bold">{market.confidence}%</div>
+            <div className="w-full h-1 bg-white/10 rounded-full mt-2">
+              <div className="h-full bg-primary rounded-full" style={{ width: `${market.confidence}%` }} />
+            </div>
+          </div>
+          <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+            <div className="text-[10px] uppercase text-muted-foreground tracking-wider mb-2 flex items-center gap-2"><Activity className="w-3 h-3"/> Daily Volume</div>
+            <div className="text-2xl font-bold">{market.volume}</div>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">AI Market Summary</h4>
+          <p className="text-sm leading-relaxed bg-primary/5 border border-primary/10 p-4 rounded-xl text-primary-100">
+            {market.aiSummary}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <h4 className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-2">Top Gainers</h4>
+            <div className="space-y-1">
+              {market.topGainers.map(t => <div key={t} className="text-sm px-2 py-1 bg-emerald-500/10 rounded text-emerald-200">{t}</div>)}
+            </div>
+          </div>
+          <div>
+            <h4 className="text-xs font-semibold text-rose-400 uppercase tracking-wider mb-2">Top Losers</h4>
+            <div className="space-y-1">
+              {market.topLosers.map(t => <div key={t} className="text-sm px-2 py-1 bg-rose-500/10 rounded text-rose-200">{t}</div>)}
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Latest Intelligence</h4>
+          <ul className="space-y-3">
+            {market.news.map((n, i) => (
+              <li key={i} className="text-sm text-muted-foreground flex gap-3">
+                <span className="text-primary mt-1">•</span> {n}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      
+      <div className="p-4 border-t border-white/10 text-center text-xs text-muted-foreground bg-white/[0.01]">
+        Select another market on the globe to compare.
+      </div>
+    </GlassCard>
+  );
+}
+
+function ComparisonPanel({ m1, m2, onClose }: { m1: Market, m2: Market, onClose: () => void }) {
+  return (
+    <GlassCard className="h-full flex flex-col bg-card/60 border-white/20 relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent" />
+      <button onClick={onClose} className="absolute top-4 right-4 p-2 rounded-full bg-white/5 hover:bg-white/10 transition-colors z-10">
+        <X className="w-4 h-4 text-muted-foreground" />
+      </button>
+
+      <div className="p-6 border-b border-white/10 flex items-center justify-between">
+        <div className="w-[45%]">
+          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-1">{m1.code}</div>
+          <h2 className="text-xl font-display font-bold truncate">{m1.name}</h2>
+        </div>
+        <div className="w-[10%] flex justify-center">
+          <ArrowRightLeft className="w-5 h-5 text-muted-foreground" />
+        </div>
+        <div className="w-[45%] text-right">
+          <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mb-1">{m2.code}</div>
+          <h2 className="text-xl font-display font-bold truncate">{m2.name}</h2>
+        </div>
+      </div>
+
+      <div className="p-6 flex-1 overflow-y-auto space-y-8">
+        
+        <CompareRow title="Index Performance">
+          <div className={`text-2xl font-bold ${m1.change >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+            {m1.change >= 0 ? "+" : ""}{m1.change.toFixed(2)}%
+          </div>
+          <div className={`text-2xl font-bold ${m2.change >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+            {m2.change >= 0 ? "+" : ""}{m2.change.toFixed(2)}%
+          </div>
+        </CompareRow>
+
+        <CompareRow title="AI Confidence">
+          <div className="flex flex-col gap-1 items-start">
+            <span className="text-xl font-bold">{m1.confidence}%</span>
+            <div className="w-24 h-1 bg-white/10 rounded-full"><div className="h-full bg-primary rounded-full" style={{width: `${m1.confidence}%`}}/></div>
+          </div>
+          <div className="flex flex-col gap-1 items-end">
+            <span className="text-xl font-bold">{m2.confidence}%</span>
+            <div className="w-24 h-1 bg-white/10 rounded-full flex justify-end"><div className="h-full bg-primary rounded-full" style={{width: `${m2.confidence}%`}}/></div>
+          </div>
+        </CompareRow>
+
+        <CompareRow title="Daily Volume">
+          <div className="text-lg font-semibold">{m1.volume}</div>
+          <div className="text-lg font-semibold">{m2.volume}</div>
+        </CompareRow>
+
+        <CompareRow title="Overall Sentiment">
+          <div className="text-sm font-bold uppercase tracking-widest text-white">{m1.sentiment}</div>
+          <div className="text-sm font-bold uppercase tracking-widest text-white">{m2.sentiment}</div>
+        </CompareRow>
+
+        <div>
+          <h4 className="text-xs font-semibold text-center text-muted-foreground uppercase tracking-wider mb-4 border-b border-white/5 pb-2">AI Comparative Analysis</h4>
+          <div className="grid grid-cols-2 gap-4">
+            <p className="text-xs leading-relaxed text-muted-foreground bg-white/5 p-3 rounded-lg border border-white/5">
+              {m1.aiSummary}
+            </p>
+            <p className="text-xs leading-relaxed text-muted-foreground bg-white/5 p-3 rounded-lg border border-white/5 text-right">
+              {m2.aiSummary}
+            </p>
+          </div>
+        </div>
+      </div>
+    </GlassCard>
+  );
+}
+
+function CompareRow({ title, children }: { title: string, children: React.ReactNode }) {
+  const [left, right] = React.Children.toArray(children);
+  return (
+    <div>
+      <h4 className="text-[10px] font-semibold text-center text-muted-foreground uppercase tracking-[0.2em] mb-3">{title}</h4>
+      <div className="flex items-center justify-between">
+        <div className="w-[45%]">{left}</div>
+        <div className="w-[10%] h-8 border-x border-white/5" />
+        <div className="w-[45%] text-right flex justify-end">{right}</div>
+      </div>
+    </div>
   );
 }

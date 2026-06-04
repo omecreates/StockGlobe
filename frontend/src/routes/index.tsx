@@ -10,6 +10,8 @@ import { LiveAnalytics } from "@/components/sections/LiveAnalytics";
 import { PortfolioIntelligence } from "@/components/sections/PortfolioIntelligence";
 import { LiveNewsIntelligence } from "@/components/sections/LiveNewsIntelligence";
 import { NewsSentiment } from "@/components/sections/NewsSentiment";
+import { Top50Stocks } from "@/components/sections/Top50Stocks";
+import { MarketMovers } from "@/components/sections/MarketMovers";
 import { NeonButton } from "@/components/ui/NeonButton";
 import { ArrowUpRight } from "lucide-react";
 
@@ -58,6 +60,8 @@ function Index() {
           <GlobalGlobeSection />
           <AIPredictionEngine />
           <LiveAnalytics />
+          <MarketMovers />
+          <Top50Stocks />
           <PortfolioIntelligence />
           <LiveNewsIntelligence />
           <NewsSentiment />

@@ -94,3 +94,61 @@ def predict_ticker(ticker: str) -> dict:
         "horizon": "30D",
         "reason": reason,
     }
+
+def predict_tickers_batch(tickers: list[str]) -> list[dict]:
+    direction_model, return_model, feature_cols = load_models()
+    
+    ticker_str = " ".join(tickers)
+    # Batch download
+    data = yf.download(ticker_str, period="3mo", group_by="ticker", threads=True, progress=False)
+    
+    results = []
+    import random
+    
+    for ticker in tickers:
+        try:
+            if len(tickers) == 1:
+                df = data.copy()
+            else:
+                if ticker not in data.columns.levels[0]:
+                    continue
+                df = data[ticker].copy()
+                
+            if df.empty or df["Close"].isna().all():
+                continue
+                
+            df = df.ffill()
+            features_row = make_features_single(df)
+            X = pd.DataFrame([features_row[feature_cols]])
+            
+            direction_proba = direction_model.predict_proba(X)[0]
+            direction_int = direction_model.predict(X)[0]
+            predicted_return = float(return_model.predict(X)[0])
+            
+            current_price = float(df["Close"].iloc[-1])
+            target_price = round(current_price * (1 + predicted_return), 2)
+            
+            confidence = round(max(direction_proba) * 100, 1)
+            if confidence > 75 and direction_int == 1:
+                signal = "BUY"
+            elif confidence > 75 and direction_int == 0:
+                signal = "SELL"
+            else:
+                signal = "HOLD"
+                
+            reason = random.choice(REASONS[signal])
+            
+            results.append({
+                "ticker": ticker,
+                "name": TICKER_NAMES.get(ticker, ticker),
+                "direction": signal,
+                "target": target_price,
+                "current": round(current_price, 2),
+                "confidence": confidence,
+                "horizon": "30D",
+                "reason": reason,
+            })
+        except Exception:
+            continue
+            
+    return results
