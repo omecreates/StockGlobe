@@ -80,7 +80,7 @@ export function FloatingNav() {
             <span className="relative flex h-6 w-6 items-center justify-center rounded bg-primary text-primary-foreground">
               <span className="relative font-display text-[11px] font-bold">N</span>
             </span>
-            <span className="font-display text-sm font-semibold tracking-[0.2em]">NEURALYX</span>
+            <span className="font-display text-sm font-semibold tracking-[0.2em]">STOCKGLOBE</span>
           </button>
 
           {/* Desktop nav */}

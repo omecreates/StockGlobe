@@ -65,7 +65,7 @@ export function Hero() {
               transition={{ delay: 0.3, duration: 0.7 }}
               className="mt-6 max-w-lg text-base leading-relaxed text-muted-foreground md:text-lg"
             >
-              Neuralyx fuses 14B parameters of macro intelligence with sub-second order flow
+              StockGlobe fuses 14B parameters of macro intelligence with sub-second order flow
               signals to forecast every major asset on Earth — in real time, with full explainability.
             </motion.p>
 

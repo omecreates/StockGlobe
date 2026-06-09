@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LineChart, Line, ResponsiveContainer, YAxis } from "recharts";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -16,6 +16,13 @@ export function MarketMovers() {
   const [activeFilter, setActiveFilter] = useState("All Stocks");
   const [activeSort, setActiveSort] = useState("Top Gainers");
   const [activeIndex, setActiveIndex] = useState(0);
+  const stackRef = useRef<HTMLDivElement>(null);
+  const activeIndexRef = useRef(activeIndex);
+  const dataLenRef = useRef(0);
+  const touchStartY = useRef<number | null>(null);
+
+  // Keep refs in sync with state
+  useEffect(() => { activeIndexRef.current = activeIndex; }, [activeIndex]);
 
   const filteredAndSortedData = useMemo(() => {
     let data = [...mockMarketMovers];
@@ -43,18 +50,78 @@ export function MarketMovers() {
     return data;
   }, [activeFilter, activeSort]);
 
+  // Keep data length ref in sync
+  useEffect(() => { dataLenRef.current = filteredAndSortedData.length; }, [filteredAndSortedData.length]);
+
   // Reset index when filter/sort changes
   useEffect(() => {
     setActiveIndex(0);
   }, [activeFilter, activeSort]);
 
-  const handleWheel = useCallback((e: React.WheelEvent) => {
-    if (e.deltaY > 0) {
-      setActiveIndex((prev) => Math.min(prev + 1, filteredAndSortedData.length - 1));
-    } else if (e.deltaY < 0) {
-      setActiveIndex((prev) => Math.max(prev - 1, 0));
-    }
-  }, [filteredAndSortedData.length]);
+  // Native wheel listener with { passive: false } so we can preventDefault
+  useEffect(() => {
+    const el = stackRef.current;
+    if (!el) return;
+
+    let lastWheelTime = 0;
+    const THROTTLE_MS = 200;
+
+    const handleWheel = (e: WheelEvent) => {
+      const idx = activeIndexRef.current;
+      const maxIdx = dataLenRef.current - 1;
+
+      // At boundaries, let page scroll through
+      if (e.deltaY > 0 && idx >= maxIdx) return;
+      if (e.deltaY < 0 && idx <= 0) return;
+
+      e.preventDefault();
+
+      const now = Date.now();
+      if (now - lastWheelTime < THROTTLE_MS) return;
+      lastWheelTime = now;
+
+      if (e.deltaY > 0) {
+        setActiveIndex((prev) => Math.min(prev + 1, maxIdx));
+      } else if (e.deltaY < 0) {
+        setActiveIndex((prev) => Math.max(prev - 1, 0));
+      }
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+    return () => el.removeEventListener("wheel", handleWheel);
+  }, []);
+
+  // Touch support for mobile swipe
+  useEffect(() => {
+    const el = stackRef.current;
+    if (!el) return;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY.current = e.touches[0].clientY;
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (touchStartY.current === null) return;
+      const deltaY = touchStartY.current - e.changedTouches[0].clientY;
+      touchStartY.current = null;
+
+      if (Math.abs(deltaY) < 30) return;
+      const maxIdx = dataLenRef.current - 1;
+
+      if (deltaY > 0) {
+        setActiveIndex((prev) => Math.min(prev + 1, maxIdx));
+      } else {
+        setActiveIndex((prev) => Math.max(prev - 1, 0));
+      }
+    };
+
+    el.addEventListener("touchstart", handleTouchStart, { passive: true });
+    el.addEventListener("touchend", handleTouchEnd, { passive: true });
+    return () => {
+      el.removeEventListener("touchstart", handleTouchStart);
+      el.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, []);
 
   const activeStock = filteredAndSortedData[activeIndex];
 
@@ -107,10 +174,17 @@ export function MarketMovers() {
           
           {/* Stacked Cards Area */}
           <div 
-            className="lg:col-span-8 relative h-[450px] perspective-[1000px] flex justify-center cursor-pointer touch-pan-y"
-            onWheel={handleWheel}
+            ref={stackRef}
+            className="lg:col-span-8 relative h-[450px] perspective-[1000px] flex justify-center cursor-pointer touch-none"
             onClick={() => setActiveIndex((prev) => (prev + 1) % filteredAndSortedData.length)}
           >
+            {/* Card counter indicator */}
+            <div className="absolute top-0 right-0 z-20 flex items-center gap-2 bg-background/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+              <span className="font-mono text-xs text-muted-foreground">
+                {activeIndex + 1} / {filteredAndSortedData.length}
+              </span>
+            </div>
+
             <AnimatePresence mode="popLayout">
               {filteredAndSortedData.map((stock, i) => {
                 // Determine position relative to active index
@@ -260,3 +334,4 @@ export function MarketMovers() {
     </section>
   );
 }
+

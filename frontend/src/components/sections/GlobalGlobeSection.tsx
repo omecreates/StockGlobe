@@ -25,11 +25,17 @@ export function GlobalGlobeSection() {
   const [timestamp, setTimestamp] = useState("");
 
   useEffect(() => {
-    setTimestamp(new Date().toLocaleTimeString());
     const interval = setInterval(() => {
       setInsightIndex((i) => (i + 1) % AI_INSIGHTS.length);
-      setTimestamp(new Date().toLocaleTimeString());
     }, 8000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    setTimestamp(new Date().toLocaleTimeString());
+    const interval = setInterval(() => {
+      setTimestamp(new Date().toLocaleTimeString());
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 

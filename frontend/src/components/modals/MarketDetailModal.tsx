@@ -152,7 +152,7 @@ export function MarketDetailModal() {
                     <ChartSkeleton height={160} />
                   ) : (
                     <div className="h-[160px]">
-                      <ResponsiveContainer>
+                      <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={series} margin={{ top: 5, right: 5, bottom: 0, left: -30 }}>
                           <defs>
                             <linearGradient id="mgrd" x1="0" x2="0" y1="0" y2="1">

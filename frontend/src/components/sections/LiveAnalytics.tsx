@@ -73,7 +73,7 @@ export function LiveAnalytics() {
         <SectionHeading
           eyebrow="Live Analytics"
           title={<>Real-time data. <span className="text-foreground font-semibold">AI overlay.</span></>}
-          description="60 days of price history with Neuralyx AI forecast overlay. Select any ticker to inspect."
+          description="60 days of price history with StockGlobe AI forecast overlay. Select any ticker to inspect."
         />
 
         <div className="mt-14 space-y-5">
@@ -203,7 +203,7 @@ export function LiveAnalytics() {
                 transition={{ duration: 0.4 }}
                 className="h-[320px]"
               >
-                <ResponsiveContainer>
+                <ResponsiveContainer width="100%" height="100%">
                   <AreaChart
                     data={series}
                     margin={{ top: 10, right: 10, bottom: 0, left: -10 }}

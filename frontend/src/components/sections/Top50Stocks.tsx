@@ -60,25 +60,30 @@ export function Top50Stocks() {
 function StackedCard({ prediction, index, total }: { prediction: any, index: number, total: number }) {
   const cardRef = useRef<HTMLDivElement>(null);
   
-  // Track scroll position of this specific card
+  // Measure how far we have scrolled past this card's sticky point
   const { scrollYProgress } = useScroll({
     target: cardRef,
-    offset: ["start start", "start start"], // sticky starts
+    offset: ["start top", "bottom top"], 
   });
   
-  // Optional: Add global scroll to calculate stacking more precisely if needed, 
-  // but standard CSS sticky + framer motion for scale/opacity works beautifully.
-  
+  // Transform values based on scroll progress
+  // As we scroll past it (and the next card comes up), scale it down slightly
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 0.9]);
+  const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, -20]); // slight push up
+
   return (
     <div 
-      className="sticky top-24 pt-4 md:pt-8 w-full transition-all"
+      className="sticky w-full transition-all"
       style={{
+        top: `calc(6rem + ${index * 10}px)`, // slight offset for each card to see the stack
         zIndex: index,
-        // Each subsequent card gets slightly higher z-index to overlay previous
+        marginBottom: "2rem"
       }}
     >
       <motion.div
         ref={cardRef}
+        style={{ scale, opacity, y }}
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
@@ -86,7 +91,7 @@ function StackedCard({ prediction, index, total }: { prediction: any, index: num
         whileHover={{ scale: 1.02 }}
         className="w-full relative"
       >
-        <GlassCard className="p-6 md:p-8 shadow-2xl border border-white/10 bg-card/95 backdrop-blur-3xl overflow-hidden group">
+        <GlassCard className="p-6 md:p-8 shadow-2xl border border-white/10 bg-card/95 backdrop-blur-3xl overflow-hidden group origin-top">
           
           {/* Subtle glow behind card */}
           <div className="absolute -inset-1 bg-gradient-to-r from-primary/10 to-accent/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-[inherit] -z-10" />

@@ -141,7 +141,7 @@ export function PortfolioIntelligence() {
                     <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
                   </div>
                 ) : (
-                  <ResponsiveContainer>
+                  <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie
                         data={portfolio.allocation}

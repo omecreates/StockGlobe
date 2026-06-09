@@ -17,7 +17,7 @@ function Shimmer({ className }: { className?: string }) {
 
 // Add shimmer keyframe to global styles (injected once)
 if (typeof document !== "undefined") {
-  const id = "neuralyx-shimmer-style";
+  const id = "stockglobe-shimmer-style";
   if (!document.getElementById(id)) {
     const style = document.createElement("style");
     style.id = id;

@@ -173,7 +173,7 @@ export function PredictionDetailModal() {
                     <ChartSkeleton height={240} />
                   ) : (
                     <div className="h-[240px]">
-                      <ResponsiveContainer>
+                      <ResponsiveContainer width="100%" height="100%">
                         <AreaChart
                           data={priceSeries}
                           margin={{ top: 10, right: 10, bottom: 0, left: -20 }}
@@ -262,7 +262,7 @@ export function PredictionDetailModal() {
                 {/* Footer */}
                 <div className="flex items-center justify-between border-t border-white/5 px-6 py-4">
                   <div className="text-[10px] text-muted-foreground">
-                    Not financial advice · {prediction.horizon} horizon · Powered by Neuralyx ML
+                    Not financial advice · {prediction.horizon} horizon · Powered by StockGlobe ML
                   </div>
                   <a
                     href={`https://finance.yahoo.com/quote/${prediction.ticker}`}
