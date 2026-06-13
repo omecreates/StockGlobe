@@ -148,4 +148,42 @@ export const watchlistApi = {
     apiFetch<{ insights: string[] }>("/api/watchlist/insights"),
 };
 
+// ─── Technical Analysis API ─────────────────────────────────────────────────────
+
+export interface TADataPoint {
+  time: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+  sma20: number | null;
+  sma50: number | null;
+  sma200: number | null;
+  ema20: number | null;
+  ema50: number | null;
+  rsi: number | null;
+  macd: number | null;
+  macd_signal: number | null;
+  macd_hist: number | null;
+  bb_upper: number | null;
+  bb_lower: number | null;
+  bb_sma: number | null;
+}
+
+export interface TAResponse {
+  ticker: string;
+  data: TADataPoint[];
+  support: number;
+  resistance: number;
+  insights: string[];
+  recommendation: string;
+  sentiment_score: number;
+}
+
+export const taApi = {
+  getAnalysis: (ticker: string, period = "1y") =>
+    apiFetch<TAResponse>(`/api/ta/${ticker}?period=${period}`),
+};
+
 export { ApiError };

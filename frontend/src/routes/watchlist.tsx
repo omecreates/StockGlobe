@@ -275,15 +275,17 @@ function WatchlistPage() {
                       >
                         {/* Ticker */}
                         <div className="flex items-center gap-3 flex-1">
-                          <span className="flex h-8 w-8 items-center justify-center rounded-md bg-white/5 text-xs font-mono font-semibold">
-                            {item.ticker.slice(0, 2)}
-                          </span>
-                          <div>
-                            <span className="text-sm font-mono font-medium">{item.ticker}</span>
-                            {pred && (
-                              <span className="block text-xs text-muted-foreground">{pred.name}</span>
-                            )}
-                          </div>
+                          <Link to={`/stock/${item.ticker}`} className="flex items-center gap-3 hover:text-primary transition-colors group">
+                            <span className="flex h-8 w-8 items-center justify-center rounded-md bg-white/5 text-xs font-mono font-semibold group-hover:bg-primary/20">
+                              {item.ticker.slice(0, 2)}
+                            </span>
+                            <div>
+                              <span className="text-sm font-mono font-medium">{item.ticker}</span>
+                              {pred && (
+                                <span className="block text-xs text-muted-foreground">{pred.name}</span>
+                              )}
+                            </div>
+                          </Link>
                         </div>
 
                         {/* Signal */}

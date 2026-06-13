@@ -9,6 +9,7 @@ from app.routers import portfolio
 from app.routers import auth
 from app.routers import access
 from app.routers import watchlist
+from app.routers import technical_analysis
 
 # Initialize DB tables
 Base.metadata.create_all(bind=engine)
@@ -36,6 +37,7 @@ app.include_router(market_data.router, prefix="/api", tags=["Market Data"])
 app.include_router(news.router, prefix="/api", tags=["News"])
 app.include_router(portfolio.router, prefix="/api", tags=["Portfolio"])
 app.include_router(access.router, prefix="/api", tags=["Access"])
+app.include_router(technical_analysis.router, prefix="/api", tags=["Technical Analysis"])
 
 @app.get("/")
 def root():

@@ -212,12 +212,12 @@ function DashboardPage() {
                       transition={{ delay: i * 0.05 }}
                       className="flex items-center justify-between rounded-lg bg-white/[0.03] px-4 py-3 hover:bg-white/[0.06] transition-colors"
                     >
-                      <div className="flex items-center gap-3">
-                        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-white/5 text-xs font-mono font-medium">
+                      <Link to={`/stock/${item.ticker}`} className="flex items-center gap-3 hover:text-primary transition-colors">
+                        <span className="flex h-8 w-8 items-center justify-center rounded-md bg-white/5 text-xs font-mono font-medium group-hover:bg-primary/20">
                           {item.ticker.slice(0, 2)}
                         </span>
                         <span className="text-sm font-medium font-mono">{item.ticker}</span>
-                      </div>
+                      </Link>
                       <span className="text-xs text-muted-foreground">
                         {new Date(item.created_at).toLocaleDateString()}
                       </span>
@@ -255,10 +255,10 @@ function DashboardPage() {
                       transition={{ delay: i * 0.05 }}
                       className="flex items-center justify-between rounded-lg bg-white/[0.03] px-4 py-3"
                     >
-                      <div className="flex items-center gap-3">
+                      <Link to={`/stock/${pred.ticker}`} className="flex items-center gap-3 hover:text-primary transition-colors">
                         <span className="text-sm font-mono font-medium">{pred.ticker}</span>
                         <span className="text-xs text-muted-foreground">{pred.name}</span>
-                      </div>
+                      </Link>
                       <div className="flex items-center gap-3">
                         <span className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${
                           pred.direction === "BUY"
