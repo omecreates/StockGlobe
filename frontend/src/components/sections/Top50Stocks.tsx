@@ -8,9 +8,10 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { SignalPill } from "@/components/ui/SignalPill";
 import { Cpu } from "lucide-react";
+import { PREDICTIONS as FALLBACK } from "@/data/predictions";
 
 export function Top50Stocks() {
-  const { data: predictions = [], loading } = useApi(() => marketApi.predictionsTop50(), []);
+  const { data: predictions = FALLBACK, loading } = useApi(() => marketApi.predictionsTop50(), FALLBACK);
   const [showAll, setShowAll] = useState(false);
   
   const displayedPredictions = showAll ? predictions : predictions.slice(0, 5);
