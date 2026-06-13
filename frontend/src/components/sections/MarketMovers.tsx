@@ -8,6 +8,7 @@ import { SignalPill } from "@/components/ui/SignalPill";
 import { Brain, TrendingUp, TrendingDown, Activity, DollarSign, PieChart, Filter } from "lucide-react";
 import { mockMarketMovers, type MarketMover } from "@/data/mockMarketMovers";
 import { cn } from "@/lib/utils";
+import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
 
 const FILTERS = ["All Stocks", "AI", "Technology", "Finance", "Healthcare", "Energy"];
 const SORTS = ["Top Gainers", "Top Losers", "Highest AI Confidence", "Most Discussed"];
@@ -127,7 +128,7 @@ export function MarketMovers() {
 
   return (
     <section id="movers" className="relative py-24 md:py-32 overflow-hidden bg-background">
-      <div className="mx-auto max-w-6xl px-6">
+      <AnimatedReveal variant="fadeUp" className="mx-auto max-w-6xl px-6">
         <SectionHeading
           eyebrow="Market Movers"
           title={<>The <span className="text-foreground font-semibold">Most Watched</span> Stocks.</>}
@@ -330,7 +331,7 @@ export function MarketMovers() {
           </div>
 
         </div>
-      </div>
+      </AnimatedReveal>
     </section>
   );
 }

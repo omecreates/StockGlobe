@@ -23,6 +23,7 @@ import {
 import { GlassCard } from "@/components/ui/GlassCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AnimatedStat } from "@/components/ui/AnimatedStat";
+import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
 import { ChartSkeleton } from "@/components/ui/Skeletons";
 import { useApi } from "@/hooks/useApi";
 import { marketApi } from "@/lib/apiClient";
@@ -69,7 +70,7 @@ export function LiveAnalytics() {
 
   return (
     <section id="analytics" className="relative py-24 md:py-32">
-      <div className="mx-auto max-w-7xl px-6">
+      <AnimatedReveal variant="fadeUp" className="mx-auto max-w-7xl px-6">
         <SectionHeading
           eyebrow="Live Analytics"
           title={<>Real-time data. <span className="text-foreground font-semibold">AI overlay.</span></>}
@@ -256,7 +257,7 @@ export function LiveAnalytics() {
             )}
           </GlassCard>
         </div>
-      </div>
+      </AnimatedReveal>
     </section>
   );
 }

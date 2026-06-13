@@ -21,6 +21,7 @@ import { useApi } from "@/hooks/useApi";
 import { marketApi } from "@/lib/apiClient";
 import { NEWS as FALLBACK } from "@/data/news";
 import type { NewsItem } from "@/types";
+import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
 import { cn } from "@/lib/utils";
 
 // Sentiment score → label + color
@@ -163,7 +164,7 @@ export function NewsSentiment() {
 
   return (
     <section id="sentiment" className="relative py-24 md:py-32">
-      <div className="mx-auto max-w-7xl px-6">
+      <AnimatedReveal variant="fadeUp" className="mx-auto max-w-7xl px-6">
         <SectionHeading
           eyebrow="News Sentiment Engine"
           title={<>Markets move on <span className="text-foreground font-semibold">narrative.</span></>}
@@ -227,7 +228,7 @@ export function NewsSentiment() {
           <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--signal-buy)] animate-pulse-glow" />
           Live NLP · {news.length} articles scored
         </div>
-      </div>
+      </AnimatedReveal>
     </section>
   );
 }

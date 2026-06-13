@@ -6,6 +6,7 @@ import { GlassCard } from "@/components/ui/GlassCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { useGlobeStore } from "@/store/globeStore";
 import { cn } from "@/lib/utils";
+import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
 
 const Globe = lazy(() => import("@/components/globe/Globe").then((m) => ({ default: m.Globe })));
 
@@ -55,7 +56,7 @@ export function GlobalGlobeSection() {
 
   return (
     <section id="globe" ref={ref} className="relative py-24 md:py-32 bg-background">
-      <div className="mx-auto max-w-[1500px] px-6">
+      <AnimatedReveal variant="fadeUp" className="mx-auto max-w-[1500px] px-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
           <SectionHeading
             eyebrow="AI Command Center"
@@ -159,7 +160,7 @@ export function GlobalGlobeSection() {
             </AnimatePresence>
           </div>
         </div>
-      </div>
+      </AnimatedReveal>
     </section>
   );
 }

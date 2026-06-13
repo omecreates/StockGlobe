@@ -14,6 +14,7 @@ import {
   ExternalLink
 } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
 
 // Types
 interface LiveNewsItem {
@@ -108,7 +109,7 @@ export function LiveNewsIntelligence() {
         </div>
       )}
 
-      <div className="mx-auto max-w-7xl relative z-10 pt-8">
+      <AnimatedReveal variant="fadeUp" className="mx-auto max-w-7xl relative z-10 pt-8">
         
         {/* Header */}
         <div className="mb-12">
@@ -323,7 +324,7 @@ export function LiveNewsIntelligence() {
           </div>
 
         </div>
-      </div>
+      </AnimatedReveal>
     </section>
   );
 }

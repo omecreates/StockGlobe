@@ -2,6 +2,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { staggerContainer, fadeUp } from "@/lib/animations";
+import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
 import {
   LayoutDashboard, Eye, Star, Zap, TrendingUp, TrendingDown,
   BarChart3, Newspaper, ArrowUpRight, LogOut, User, List,
@@ -126,24 +128,20 @@ function DashboardPage() {
 
       <main className="mx-auto max-w-7xl px-4 py-8 md:px-6">
         {/* Welcome */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
+        <AnimatedReveal variant="fadeUp" className="mb-8">
           <h1 className="text-2xl font-semibold">
             Welcome back, {state.user?.name ?? "Trader"}
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             Here's your market intelligence overview
           </p>
-        </motion.div>
+        </AnimatedReveal>
 
         {/* Stats Grid */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
           className="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4"
         >
           {[
@@ -152,13 +150,13 @@ function DashboardPage() {
             { label: "Sell Signals", value: sellSignals, icon: TrendingDown, color: "text-signal-sell" },
             { label: "Predictions", value: predictions.length, icon: BarChart3, color: "text-purple-400" },
           ].map((stat, i) => (
-            <div key={stat.label} className="glass rounded-xl p-4">
+            <motion.div variants={fadeUp} key={stat.label} className="glass rounded-xl p-4 transition-transform hover:-translate-y-1 hover:scale-[1.02] duration-300">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-muted-foreground">{stat.label}</span>
                 <stat.icon className={`h-4 w-4 ${stat.color}`} />
               </div>
               <span className="text-2xl font-semibold">{loading ? "—" : stat.value}</span>
-            </div>
+            </motion.div>
           ))}
         </motion.div>
 
@@ -166,10 +164,9 @@ function DashboardPage() {
           {/* Left column: Watchlist + Predictions */}
           <div className="lg:col-span-2 space-y-6">
             {/* Watchlist */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
+            <AnimatedReveal
+              variant="fadeUp"
+              delay={0.2}
               className="glass rounded-xl p-6"
             >
               <div className="flex items-center justify-between mb-4">
@@ -225,13 +222,12 @@ function DashboardPage() {
                   ))}
                 </div>
               )}
-            </motion.div>
+            </AnimatedReveal>
 
             {/* Top Predictions */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
+            <AnimatedReveal
+              variant="fadeUp"
+              delay={0.3}
               className="glass rounded-xl p-6"
             >
               <h2 className="text-sm font-medium flex items-center gap-2 mb-4">
@@ -277,16 +273,15 @@ function DashboardPage() {
                   ))}
                 </div>
               )}
-            </motion.div>
+            </AnimatedReveal>
           </div>
 
           {/* Right column: Insights + News */}
           <div className="space-y-6">
             {/* AI Insights */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.25 }}
+            <AnimatedReveal
+              variant="fadeUp"
+              delay={0.25}
               className="glass rounded-xl p-6"
             >
               <h2 className="text-sm font-medium flex items-center gap-2 mb-4">
@@ -317,13 +312,12 @@ function DashboardPage() {
                   ))}
                 </div>
               )}
-            </motion.div>
+            </AnimatedReveal>
 
             {/* Recent News */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 }}
+            <AnimatedReveal
+              variant="fadeUp"
+              delay={0.35}
               className="glass rounded-xl p-6"
             >
               <h2 className="text-sm font-medium flex items-center gap-2 mb-4">
@@ -358,7 +352,7 @@ function DashboardPage() {
                   ))}
                 </div>
               )}
-            </motion.div>
+            </AnimatedReveal>
           </div>
         </div>
       </main>

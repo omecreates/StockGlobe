@@ -25,6 +25,7 @@ import { useApp } from "@/store/appStore";
 import { PREDICTIONS as FALLBACK } from "@/data/predictions";
 import type { Prediction, SignalDirection } from "@/types";
 import { cn } from "@/lib/utils";
+import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
 
 // Removed NeuralBackground
 
@@ -118,7 +119,7 @@ export function AIPredictionEngine() {
   return (
     <section id="predictions" className="relative py-24 md:py-32">
 
-      <div className="relative mx-auto max-w-7xl px-6">
+      <AnimatedReveal variant="fadeUp" className="relative mx-auto max-w-7xl px-6">
         <SectionHeading
           eyebrow="AI Prediction Engine"
           title={<>Markets predicted. <span className="text-foreground font-semibold">Risk quantified.</span></>}
@@ -181,7 +182,7 @@ export function AIPredictionEngine() {
           <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--signal-buy)] animate-pulse-glow" />
           Live · Updated every 60s · {predictions.length} signals active
         </div>
-      </div>
+      </AnimatedReveal>
     </section>
   );
 }

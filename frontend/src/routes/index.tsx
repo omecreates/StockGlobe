@@ -12,6 +12,7 @@ import { LiveNewsIntelligence } from "@/components/sections/LiveNewsIntelligence
 import { NewsSentiment } from "@/components/sections/NewsSentiment";
 import { Top50Stocks } from "@/components/sections/Top50Stocks";
 import { MarketMovers } from "@/components/sections/MarketMovers";
+import { AIAssistantSection } from "@/components/sections/AIAssistantSection";
 import { NeonButton } from "@/components/ui/NeonButton";
 import { ArrowUpRight } from "lucide-react";
 
@@ -65,6 +66,7 @@ function Index() {
           <PortfolioIntelligence />
           <LiveNewsIntelligence />
           <NewsSentiment />
+          <AIAssistantSection />
           <CTA />
         </main>
         <Footer />

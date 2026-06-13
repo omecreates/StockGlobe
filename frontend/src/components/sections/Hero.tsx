@@ -8,6 +8,7 @@ import { MiniSparkline } from "@/components/ui/MiniSparkline";
 import { SignalPill } from "@/components/ui/SignalPill";
 import { useApp } from "@/store/appStore";
 import { useScrollTo } from "@/hooks/useApi";
+import { HeroBackground } from "@/components/ui/HeroBackground";
 
 const STACK_CARDS = [
   { ticker: "NVDA", name: "NVIDIA Corp", price: 142.34, change: 3.21, signal: "BUY" as const, conf: 94 },
@@ -26,7 +27,8 @@ export function Hero() {
 
   return (
     <section id="top" ref={ref} className="relative min-h-screen overflow-hidden pt-32 pb-24 md:pt-40">
-      <motion.div style={{ y, opacity }} className="relative mx-auto max-w-7xl px-6">
+      <HeroBackground />
+      <motion.div style={{ y, opacity }} className="relative mx-auto max-w-7xl px-6 z-10">
         
         <div className="grid gap-16 lg:grid-cols-2 lg:gap-8 items-center">
           

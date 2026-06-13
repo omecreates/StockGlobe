@@ -20,6 +20,7 @@ import { Check, Zap, TrendingUp, ShieldCheck, BarChart3, Loader2 } from "lucide-
 import { GlassCard } from "@/components/ui/GlassCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AnimatedStat } from "@/components/ui/AnimatedStat";
+import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
 import { useApi } from "@/hooks/useApi";
 import { marketApi } from "@/lib/apiClient";
 import { useApp } from "@/store/appStore";
@@ -101,7 +102,7 @@ export function PortfolioIntelligence() {
 
   return (
     <section id="portfolio" className="relative py-24 md:py-32">
-      <div className="mx-auto max-w-7xl px-6">
+      <AnimatedReveal variant="fadeUp" className="mx-auto max-w-7xl px-6">
         <SectionHeading
           eyebrow="Portfolio Intelligence"
           title={<>AI-optimised <span className="text-foreground font-semibold">allocation.</span></>}
@@ -281,7 +282,7 @@ export function PortfolioIntelligence() {
             )}
           </div>
         </div>
-      </div>
+      </AnimatedReveal>
     </section>
   );
 }

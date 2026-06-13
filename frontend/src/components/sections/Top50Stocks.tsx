@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useApi } from "@/hooks/useApi";
 import { marketApi } from "@/lib/apiClient";
+import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { SignalPill } from "@/components/ui/SignalPill";
@@ -16,7 +17,7 @@ export function Top50Stocks() {
   
   return (
     <section id="top50" className="relative py-24 md:py-32 overflow-hidden">
-      <div className="mx-auto max-w-5xl px-6">
+      <AnimatedReveal className="mx-auto max-w-5xl px-6">
         <SectionHeading
           eyebrow="Market Breadth"
           title={<>The <span className="text-foreground font-semibold">Top 50</span> Global Assets.</>}
@@ -52,7 +53,7 @@ export function Top50Stocks() {
             </div>
           )}
         </div>
-      </div>
+      </AnimatedReveal>
     </section>
   );
 }
