@@ -10,6 +10,7 @@ from app.routers import auth
 from app.routers import access
 from app.routers import watchlist
 from app.routers import technical_analysis
+from app.routers import chat
 
 # Initialize DB tables
 Base.metadata.create_all(bind=engine)
@@ -38,7 +39,7 @@ app.include_router(news.router, prefix="/api", tags=["News"])
 app.include_router(portfolio.router, prefix="/api", tags=["Portfolio"])
 app.include_router(access.router, prefix="/api", tags=["Access"])
 app.include_router(technical_analysis.router, prefix="/api", tags=["Technical Analysis"])
-
+app.include_router(chat.router, prefix="/api", tags=["Chat"])
 @app.get("/")
 def root():
     return {"status": "StockGlobe API running", "docs": "/docs"}

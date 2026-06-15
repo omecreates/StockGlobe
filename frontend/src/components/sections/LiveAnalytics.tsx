@@ -226,7 +226,7 @@ export function LiveAnalytics() {
                 transition={{ duration: 0.4 }}
                 className="h-[320px]"
               >
-                <ResponsiveContainer width="100%" height="100%">
+                <ResponsiveContainer width="100%" height="100%" minHeight={1}>
                   <AreaChart
                     data={series}
                     margin={{ top: 10, right: 10, bottom: 0, left: -10 }}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bot, User, Send, Sparkles } from "lucide-react";
 import { AnimatedReveal } from "@/components/ui/AnimatedReveal";
@@ -15,19 +15,46 @@ export function AIAssistantSection() {
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const handleSend = (e?: React.FormEvent) => {
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isTyping]);
+
+  const handleSend = async (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!inputValue.trim()) return;
 
-    setMessages(prev => [...prev, { role: "user", text: inputValue }]);
+    const userMessage = { role: "user", text: inputValue };
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
     setInputValue("");
     setIsTyping(true);
 
-    setTimeout(() => {
-      setMessages(prev => [...prev, { role: "assistant", text: "I am analyzing the global capital flows and sentiment for that query. Based on our models, the outlook remains cautiously optimistic, but volatility is expected in the short term." }]);
+    try {
+      const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${API_BASE}/api/chat`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: newMessages })
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        setMessages(prev => [...prev, { role: "assistant", text: data.reply }]);
+      } else {
+        setMessages(prev => [...prev, { role: "assistant", text: "Sorry, I am currently experiencing higher than normal network latency. Please try again." }]);
+      }
+    } catch (error) {
+      setMessages(prev => [...prev, { role: "assistant", text: "Sorry, I am unable to reach the server. Please check your connection." }]);
+    } finally {
       setIsTyping(false);
-    }, 2000);
+    }
   };
 
   return (
@@ -99,6 +126,7 @@ export function AIAssistantSection() {
                   </div>
                 </motion.div>
               )}
+              <div ref={messagesEndRef} />
             </AnimatePresence>
           </div>
 

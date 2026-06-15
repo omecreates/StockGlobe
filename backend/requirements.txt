@@ -14,3 +14,4 @@ feedparser
 SQLAlchemy
 passlib[bcrypt]
 python-jose[cryptography]
+google-generativeai

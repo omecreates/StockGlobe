@@ -274,7 +274,7 @@ export function MarketMovers() {
                       </div>
 
                       <div className="h-24 w-full">
-                        <ResponsiveContainer width="100%" height="100%">
+                        <ResponsiveContainer width="100%" height="100%" minHeight={1}>
                           <LineChart data={stock.sparkline.map((val, idx) => ({ val, idx }))}>
                             <YAxis domain={['auto', 'auto']} hide />
                             <Line 

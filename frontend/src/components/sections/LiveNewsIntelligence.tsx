@@ -295,7 +295,7 @@ export function LiveNewsIntelligence() {
                           {/* Image */}
                           <div className="relative h-48 overflow-hidden">
                             <img 
-                              src={item.image} 
+                              src={item.image || "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3"} 
                               alt={item.title} 
                               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                               onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3'; }}
